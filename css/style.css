@@ -1,0 +1,104 @@
+html{
+    scroll-behavior: smooth;
+}
+
+.avat{
+    width: 150px;
+    height: 150px;
+    border: aliceblue;
+    border-width: 2px;
+}
+
+body{
+    background: fixed;
+    background-size: cover;
+    background-image: url("../images/bg.jpg");
+}
+
+nav{
+    background: none;
+}
+
+.men{
+    background: none;
+}
+
+.men:hover{
+    background-color: aliceblue;
+    color: black;
+}
+.men:focus{
+    background: none;
+    color: white;
+}
+
+
+.main{
+    background: none;
+    min-height: 80vh;
+    padding-top: 15vh;
+    display: none;
+    transition: 0.5s;
+}
+
+@media only screen and (max-width: 768px) {
+    /* For mobile phones: */
+    .main {
+      padding-top: 0;
+    }
+  }
+
+
+.logolink{
+    color: white;
+
+}
+
+.bnone{
+    background: none;
+    color: white;
+}
+
+.btn-floating:hover{
+    background: white;
+}
+
+.btn-floating>i:hover{
+    
+    color: black;
+    
+}
+
+
+.bnonemod{
+    background: none;
+    color: white;
+    padding: 2%;
+    min-height: 20vh;
+    transition: 0.5s;
+}
+
+
+
+.bnonemod:hover{
+    background:white;
+    color: black;
+    cursor: pointer;
+}
+
+
+nav{
+    -webkit-box-shadow:none;
+    box-shadow: none;
+}
+
+@font-face{
+font-family: namer;
+src: url('../fonts/batman_forever/batmfa__.ttf')
+}
+
+.name{
+    font-family: namer ;
+}
+
+

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dikshant Sagar</title>
+    <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/e0a08b5c11.js" crossorigin="anonymous"></script>
+  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link rel="icon" href="images/fav.png" sizes="16x16">
+</head>
+<body>
+   <div class="navbar-fixed">
+        <nav>
+            <div class="nav-wrapper">
+                <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a class="waves-effect waves-light  men" onclick="home();"><i class="material-icons">house</i></a></li>
+                    <li><a class="waves-effect waves-light  men" onclick="about();"><i class="material-icons">person</i></a></li>
+                    <li><a class="waves-effect waves-light  men" onclick="skills();"><i class="material-icons">code</i></a></li>
+                    <li><a class="waves-effect waves-light  men" onclick="work();"><i class="material-icons">work</i></a></li>
+                    <li><a class="waves-effect waves-light  men" onclick="contact();"><i class="material-icons">contacts</i></a></li>
+                </ul>
+            </div>
+        </nav>
+   </div>
+   <ul class="sidenav" id="mobile-demo">
+        <li><a class="waves-effect waves-light  men" onclick="home()"><i class="material-icons">house</i> Home</a></li>
+        <li><a class="waves-effect waves-light  men" onclick="about()"><i class="material-icons">person</i> About</a></li>
+        <li><a class="waves-effect waves-light  men" onclick="skills()"><i class="material-icons">code</i> Skills</a></li>
+        <li><a class="waves-effect waves-light  men" onclick="work()"><i class="material-icons">work</i> Recent Work</a></li>
+        <li><a class="waves-effect waves-light  men" onclick="contact()"><i class="material-icons">contacts</i> Contact Me</a></li>
+    </ul>
+    <div class="container center">
+       <div class="section">
+          <div class="main white-text" id="home">
+              <img src="images/d2.png" class="circle avat">
+              <h3 class='name'>Dikshant Sagar</h3>
+              <h3>Hello!</h3>
+              <h5>I'm a <b class="pink-text">Web</b> and <b class="orange-text">ML</b><b class="blue-text"> / </b><b class="green-text">DL</b> Developer.</h5>
+          </div>
+          <div class="main white-text" id="about">
+              <h2 class="pink-text name" id="age"></h2>
+              <h3>Undergraduate at <a class="cyan-text" href="https://iiitd.ac.in/">IIIT Delhi</a>.</h3>
+              <h5>Working on <b class="orange-text">ML</b> Research with <a class="green-text" href="http://midas.iiitd.edu.in/">MIDAS</a> and <a class="blue-text" href="http://sbilab.iiitd.edu.in/">SBI</a> Lab.</h5>
+              
+          </div>
+          <div class="main white-text" id="skills">
+            <h3 class="name"> Skills</h3>
+            <div class="row">
+                <div class="col s12 m4 l4">
+                    <div class="card bnonemod">
+                        <h5 class="green-text">Languages</h5>
+                        <ul>
+                            <li>Python</li>
+                            <li>JavaScript</li>
+                            <li>Java</li>
+                            <li>SQL</li>
+                            <li>PHP</li>
+                            <li>Matlab</li>
+                            <li>C++</li>
+                            <li>Shell</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col s12 m4 l4">
+                    <div class="card bnonemod">
+                        <h5 class="orange-text">Machine Learning</h5>
+                        <ul>
+                            <li>Pytorch</li>
+                            <li>Keras</li>
+                            <li>Tensorflow</li>
+                            <li>OpenCV</li>
+                            <li>Scikit-Learn</li>
+                            <li>Numpy</li>
+                            <li>Matplotlib</li>
+                            <li>Seaborn</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col s12 m4 l4">
+                    <div class="card bnonemod">
+                        <h5 class="pink-text">Web Dev</h5>
+                        <ul>
+                            <li>HTML5/CSS</li>
+                            <li>Django</li>
+                            <li>ReactJS</li>
+                            <li>Materialize</li>
+                            <li>Bootstrap</li>
+                            <li>Heroku</li>
+                            <li>Firebase</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+               <div class="card bnonemod" style="min-height: 10vh;">
+                    <h5 class="blue-text">Miscellaneous</h5>
+                    <ul>
+                        <li>Arduino</li>
+                        <li>Raspberry Pi</li>
+                    </ul>
+               </div>
+            </div>
+
+          </div>
+          <div class="main white-text" id="work">
+              <h3 class="name">Recent Projects</h3>
+              <div class="row">
+                    <div class="col s12 m4 l4">
+                        <div class="card bnonemod">
+                            <h5 class="green-text">PAI-BPR</h5>
+                            <p>
+                                State of the art fashion recommendation system capturing user preference and capable of attribute preference interpretation.
+
+                            </p>
+                        </div>
+
+                    </div>
+                    <div class="col s12 m4 l4">
+                        <div class="card bnonemod">
+                            <h5 class="orange-text">Conditional Facial Emotion Generation</h5>
+                            <p>
+                                Generating Photorealistic Facial Images with specified emotions using Conditional-GAN.
+                            </p>
+                        </div>
+                        
+                    </div>
+                    <div class="col s12 m4 l4">
+                        <div class="card bnonemod">
+                            <h5 class="pink-text">MaskRCNN for Cloud Image Segmentation</h5>
+                            <p>
+                                A Mask-RCNN implementation for classifying cloud shapes from NASA Worldview Dataset and creating ROI's and Masks.
+
+                            </p>
+                        </div>
+                        
+                    </div>
+              </div>
+              <div class="row">
+                  <a class="btn men" href="https://github.com/dikshantsagar"><b class="blue-text">More</b></a>
+              </div>
+          </div>
+          <div class="main white-text" id='contact'>
+              <h3 class="name">Contact Me</h3>
+              <div class="row">
+                    <div class="col s12 m4 l4">
+                        <div class="card bnonemod">
+                            <h5 class="green-text"><i class="large material-icons">phone</i></h5>
+                            <p> +91-8383861754</p>
+                        </div>
+                    </div>
+                    <div class="col s12 m4 l4">
+                      <div class="card bnonemod">
+                        <h5 class="orange-text"><i class="large material-icons">mail</i></h5>
+                        <p> sagar.dikshant@gmail.com </p>
+                      </div>
+                    </div>
+                    <div class="col s12 m4 l4">
+                        <div class="card bnonemod">
+                            <h5 class="pink-text"><i class="large material-icons">location_on</i></h5>
+                            <p> Vasundhara, Ghaziabad, UP, India</p>
+                        </div>
+                    </div>
+              </div>
+          </div>
+
+        </div>
+       </div>
+       <div class="fixed-action-btn">
+        <a class="btn-floating btn-large pink ">
+            <i class="large material-icons">share</i>
+        </a>
+        <ul>
+            <li><a class="btn-floating green" href="https://github.com/dikshantsagar"><i class="fab fa-github"></i></a></li>
+            <li><a class="btn-floating orange" href="https://www.instagram.com/dikshant.sagar.9/"><i class="fab fa-instagram"></i></a></li>
+            <li><a class="btn-floating blue" href="https://twitter.com/dikshantsagar"><i class="fab fa-twitter"></i></a></li>
+        </ul>
+       </div>
+    </div>
+    
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="js/materialize.js"></script>
+  <script src="js/init.js"></script>
+</body>
+</html>
