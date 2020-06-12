@@ -23,20 +23,21 @@
 
 
   function home(){
-    $('#home').fadeIn('slow');
+
     $('#about').fadeOut('fast');
     $('#skills').fadeOut('fast');
     $('#work').fadeOut('fast');
     $('#contact').fadeOut('fast');
+    $('#home').fadeIn('slow');
     $('.sidenav').sidenav('close');
   }
 
   function about(){
     $('#home').fadeOut('fast');
-    $('#about').fadeIn('slow');
     $('#skills').fadeOut('fast');
     $('#work').fadeOut('fast');
     $('#contact').fadeOut('fast');
+    $('#about').fadeIn('slow');
     $('.sidenav').sidenav('close');
 
   }
@@ -44,9 +45,9 @@
   function skills(){
     $('#home').fadeOut('fast');
     $('#about').fadeOut('fast');
-    $('#skills').fadeIn('slow');
     $('#work').fadeOut('fast');
     $('#contact').fadeOut('fast');
+    $('#skills').fadeIn('slow');
     $('.sidenav').sidenav('close');
   }
 
@@ -54,8 +55,8 @@
     $('#home').fadeOut('fast');
     $('#about').fadeOut('fast');
     $('#skills').fadeOut('fast');
-    $('#work').fadeIn('slow');
     $('#contact').fadeOut('fast');
+    $('#work').fadeIn('slow');
     $('.sidenav').sidenav('close');
 
   }
