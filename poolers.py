@@ -149,7 +149,7 @@ class ROIPooler(nn.Module):
         self.inlayer = nn.Conv2d(256, 256*2, kernel_size=(1,1), padding=0)
         self.reclayer = nn.Conv2d(256, 256*2, kernel_size=(3,3), stride=(2,2), padding=0)
         self.outlayer = nn.Conv2d(256*2, 256, kernel_size=(1,1))
-        self.resize = Resize(size=(self.output_size*2, self.output_size*2))
+        self.resize = Resize(size=(self.output_size, self.output_size))
         self.var_outlayer = nn.Conv2d(256,256, kernel_size=(2,2), stride=(1,1))
 
         if pooler_type == "ROIAlign":
@@ -284,9 +284,9 @@ class ROIPooler(nn.Module):
             
             if self.fixed:
                 
-                crops,boxes = self.fixed_learnable_downsample(crops,boxes, out_shape=self.output_size, device=device)
-                output.append(pooler(crops,boxes,1.0))
- 
+                #crops,boxes = self.fixed_learnable_downsample(crops,boxes, out_shape=self.output_size, device=device)
+                #output.append(pooler(crops,boxes,1.0))
+                output.append(crops)
             else:
                 out = self.variable_learnable_downsample(cropped_feat)
                 output.append(out)
@@ -335,4 +335,3 @@ class ROIPooler(nn.Module):
             features_,boxes_ = self.rcConv(features_[mask],boxes_[mask])
             indexes = indexes_
         return result_x,result_box
-
