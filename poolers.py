@@ -260,8 +260,8 @@ class ROIPooler(nn.Module):
             feats = x[level]
             inds = []
 
-            boxes[boxes[:,1]< 0,1] = torch.tensor(0.,device=device)
-            boxes[boxes[:,2]< 0,2] = torch.tensor(0.,device=device)
+            boxes[boxes[:,1]< 0,1] = torch.tensor(0,device=device, dtype=torch.long)
+            boxes[boxes[:,2]< 0,2] = torch.tensor(0,device=device, dtype=torch.long)
             
             boxes[boxes[:,3] >= feats[0].shape[-1],3] = feats[0].shape[-1] - torch.tensor(1,device=device)
             boxes[boxes[:,4] >= feats[0].shape[-2],4] = feats[0].shape[-2] - torch.tensor(1,device=device)
@@ -285,12 +285,14 @@ class ROIPooler(nn.Module):
 
             boxes[:,0] = torch.arange(boxes.shape[0]) ## i changes this from 0
             boxes[:,3:5] -= boxes[:,1:3]
-            boxes[:,1:3] = torch.tensor(0.,device=device)
+            boxes[:,1:3] = torch.tensor(0,device=device, dtype=torch.long)
             
             if self.fixed:
                 crops,boxes = self.fixed_learnable_downsample(crops,boxes, out_shape=self.output_size, device=device)
                 output.append(pooler(crops,boxes,1.0))
-                output = torch.cat(output,0)
+            
+        
+        output = torch.cat(output,0)
             
         return output
 
@@ -309,7 +311,7 @@ class ROIPooler(nn.Module):
         box_x[:,-1],box_x[:,-2] = self.hwOut(box_x[:,-1],box_x[:,-2],strides=(2,2),kernel=(3,3))
         #make box changes
         return x1,box_x
-        
+
     def fixed_learnable_downsample(self, features,boxes, out_shape=(7,7),kernel_size=(3,3),strides=(2,2),device=None):
 
         result_x = torch.zeros(features.size(),dtype=torch.float,device=device)
