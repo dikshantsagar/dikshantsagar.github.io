@@ -4,7 +4,7 @@ from typing import List
 import torch
 from torch import nn
 from torchvision.ops import RoIPool
-from torchvision.transforms import Resize
+
 from detectron2.layers import ROIAlign, ROIAlignRotated, cat, nonzero_tuple
 from detectron2.structures import Boxes
 
@@ -149,7 +149,7 @@ class ROIPooler(nn.Module):
         self.inlayer = nn.Conv2d(256, 256*2, kernel_size=(1,1), padding=0)
         self.reclayer = nn.Conv2d(256, 256*2, kernel_size=(3,3), stride=(2,2), padding=0)
         self.outlayer = nn.Conv2d(256*2, 256, kernel_size=(1,1))
-        self.resize = Resize(size=(self.output_size, self.output_size))
+        
         self.var_outlayer = nn.Conv2d(256,256, kernel_size=(2,2), stride=(1,1))
 
         if pooler_type == "ROIAlign":
@@ -249,50 +249,49 @@ class ROIPooler(nn.Module):
 
 
         for level, pooler in enumerate(self.level_poolers):
+
             inds = nonzero_tuple(level_assignments == level)[0]
             boxes = pooler_fmt_boxes[inds]
             scale = pooler.spatial_scale
-            
             boxes[:,1:3] = torch.floor(boxes[:,1:3]*scale)
             boxes[:,3:5] = torch.ceil(boxes[:,3:5]*scale)
             boxes = boxes.to(device=device,dtype=torch.long)
-            
+
             feats = x[level]
             inds = []
 
-            # replacing the below for loop
-            boxes[boxes[:,1]< 0,1] = 0
-            boxes[boxes[:,2]< 0,2] = 0
+            boxes[boxes[:,1]< 0,1] = torch.tensor(0.,device=device)
+            boxes[boxes[:,2]< 0,2] = torch.tensor(0.,device=device)
             
-            boxes[boxes[:,3] >= feats[0].shape[-1],3] = feats[0].shape[-1]-1
-            boxes[boxes[:,4] >= feats[0].shape[-2],4] = feats[0].shape[-2]-1
+            boxes[boxes[:,3] >= feats[0].shape[-1],3] = feats[0].shape[-1] - torch.tensor(1,device=device)
+            boxes[boxes[:,4] >= feats[0].shape[-2],4] = feats[0].shape[-2] - torch.tensor(1,device=device)
 
             mask = torch.logical_and((boxes[:,3]-boxes[:,1]) > 1,(boxes[:,4]-boxes[:,2]) > 1)
             boxes=boxes[mask]
+
             if boxes.shape[0] < 1:
                 continue
-            crops = torch.zeros(
-            (boxes.shape[0], num_channels, output_size*2, output_size*2), dtype=dtype, device=device
-        )
-            for i in range(boxes.shape[0]):
+    
+            height = boxes[:,4] - boxes[:,2] + torch.tensor(1,device=device)
+            width = boxes[:,3] - boxes[:,1] + torch.tensor(1,device=device)
+
+            max_h,max_w = torch.max(torch.max(height),0)[0], torch.max(torch.max(width),0)[0]
+
+            crops = torch.zeros((boxes.shape[0], num_channels, max_h, max_w),device=device,dtype=torch.float32)
+
+            for i in  range(boxes.shape[0]): 
                 ind,x0,y0,x1,y1 = boxes[i]
-                crops[i] = self.resize(feats[ind][:,y0:y1+1,x0:x1+1])
-            
+                crops[i,:,:y1-y0+1,:x1-x0+1] = feats[ind][:,y0:y1+1,x0:x1+1]
+
             boxes[:,0] = torch.arange(boxes.shape[0]) ## i changes this from 0
             boxes[:,3:5] -= boxes[:,1:3]
-            boxes[:,1:3] = 0
+            boxes[:,1:3] = torch.tensor(0.,device=device)
             
             if self.fixed:
-                
-                #crops,boxes = self.fixed_learnable_downsample(crops,boxes, out_shape=self.output_size, device=device)
-                #output.append(pooler(crops,boxes,1.0))
-                output.append(crops)
-            else:
-                out = self.variable_learnable_downsample(cropped_feat)
-                output.append(out)
-        if self.fixed:
+                crops,boxes = self.fixed_learnable_downsample(crops,boxes, out_shape=self.output_size, device=device)
+                output.append(pooler(crops,boxes,1.0))
+                output = torch.cat(output,0)
             
-            output = torch.cat(output,0)
         return output
 
     def outShape(self,x,stride,kernel):
@@ -307,14 +306,12 @@ class ROIPooler(nn.Module):
     def rcConv(self,x,box_x):
         x1 = self.reclayer(x)
         x1 = self.outlayer(x1)
-        #x1 = padding(x1)
         box_x[:,-1],box_x[:,-2] = self.hwOut(box_x[:,-1],box_x[:,-2],strides=(2,2),kernel=(3,3))
         #make box changes
         return x1,box_x
         
     def fixed_learnable_downsample(self, features,boxes, out_shape=(7,7),kernel_size=(3,3),strides=(2,2),device=None):
-        # start edit 3
-        #mask_omit = torch.ones((boxes.shape[0]),dtype=torch.bool,device=device)
+
         result_x = torch.zeros(features.size(),dtype=torch.float,device=device)
         result_box = torch.zeros(boxes.size(),device=device,dtype=torch.long)
         #N,c,m,n = features.shape
