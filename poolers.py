@@ -264,8 +264,7 @@ class ROIPooler(nn.Module):
             
             boxes[boxes[:,3] >= feats[0].shape[-1],3] = feats[0].shape[-1]-1
             boxes[boxes[:,4] >= feats[0].shape[-2],4] = feats[0].shape[-2]-1
-            mask = torch.logical_and((boxes[:,3]-boxes[:,1]) > 1,(boxes[:,4]-boxes[:,2]) > 1)
-            boxes=boxes[mask]
+            
             if boxes.shape[0] < 1:
                 continue
             
@@ -287,11 +286,11 @@ class ROIPooler(nn.Module):
         
         return output
     def outShape(self,x,stride,kernel):
-        x_out = torch.floor((x-kernel)/(stride*1.0)+1) - 2
+        x_out = torch.floor((x-kernel)/(stride*1.0)+1)
         return x_out.type(torch.int32)
     def hwOut(self,hin,win,strides=(1,1),kernel=(3,3)):
-        hout = self.outShape(hin,strides[0],kernel[0]) + 2
-        wout = self.outShape(win,strides[1],kernel[1]) + 2
+        hout = self.outShape(hin,strides[0],kernel[0])
+        wout = self.outShape(win,strides[1],kernel[1])
         return hout,wout
     def rcConv(self,x,box_x):
         x1 = self.reclayer(x)
@@ -323,5 +322,3 @@ class ROIPooler(nn.Module):
             features_,boxes_ = self.rcConv(features_[mask],boxes_[mask])
             indexes = indexes_
         return result_x,result_box
-
-
