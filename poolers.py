@@ -286,11 +286,11 @@ class ROIPooler(nn.Module):
         
         return output
     def outShape(self,x,stride,kernel):
-        x_out = torch.floor((x-kernel)/(stride*1.0)+1)
+        x_out = torch.floor((x-kernel)/(stride*1.0)+1) - 2
         return x_out.type(torch.int32)
     def hwOut(self,hin,win,strides=(1,1),kernel=(3,3)):
-        hout = self.outShape(hin,strides[0],kernel[0])
-        wout = self.outShape(win,strides[1],kernel[1])
+        hout = self.outShape(hin,strides[0],kernel[0]) + 2
+        wout = self.outShape(win,strides[1],kernel[1]) + 2
         return hout,wout
     def rcConv(self,x,box_x):
         x1 = self.reclayer(x)
