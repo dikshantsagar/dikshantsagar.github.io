@@ -168,7 +168,7 @@ class Merge(nn.Module):
 
 
 @BACKBONE_REGISTRY.register()
-class SpineNet(nn.Module):
+class SpineNet(Backbone):
     """Class to build SpineNet backbone"""
     def __init__(self,
                  arch,
@@ -293,4 +293,12 @@ class SpineNet(nn.Module):
             if spec.is_output:
                 output_feat[spec.level] = target_feat
 
-        return [self.endpoint_convs[str(level)](output_feat[level]) for level in self.output_level]
+        #return [self.endpoint_convs[str(level)](output_feat[level]) for level in self.output_level]
+        return {"res"+str(level) : output_feat[level] for level in self.output_level}
+
+
+
+@BACKBONE_REGISTRY.register()
+def build_spinenet_backbone(cfg, input_shape):
+
+    return SpineNet("49", in_channels=input_shape.channels)
