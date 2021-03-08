@@ -316,7 +316,7 @@ class ROIPooler(nn.Module):
             indexes_ = indexes[mask]
             finalized =  indexes[mask_not]
             # port finalized to results
-            features[finalized,:,:,:features_.shape[2],:features_.shape[3]] = features_[mask_not,:,:,:,:]
+            features[finalized,:,:,:features_.shape[3],:features_.shape[4]] = features_[mask_not,:,:,:,:]
             boxes[finalized,:] = boxes_[mask_not,:]
             features_,boxes_ = self.rcConv(features_[mask],boxes_[mask])
             indexes = indexes_
