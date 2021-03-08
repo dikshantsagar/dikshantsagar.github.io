@@ -147,7 +147,8 @@ class ROIPooler(nn.Module):
         self.fixed = fixed
 
         ######
-        self.reclayer = nn.Conv3d(256, 256, kernel_size=(1,3,3), stride=(1,1,1), padding=0, bias=False)
+        self.inlayer = nn.Conv3d(1,256,kernel_size=(1,3,3),stride=(1,1,1),padding=0, bias=False)
+        self.reclayer = nn.Conv3d(256, 1, kernel_size=(1,1,1), stride=(1,1,1), padding=0, bias=False)
         ######
 
         if pooler_type == "ROIAlign":
@@ -293,17 +294,14 @@ class ROIPooler(nn.Module):
         wout = self.outShape(win,strides[1],kernel[1]) + 2
         return hout,wout
     def rcConv(self,x,box_x):
-        x1 = self.reclayer(x)
+        x = self.inlayer(x)
+        x = self.reclayer(x)
         #x1 = padding(x1)
         box_x[:,-1],box_x[:,-2] = self.hwOut(box_x[:,-1],box_x[:,-2],strides=(1,1),kernel=(3,3))
         #make box changes
-        return x1,box_x
+        return x,box_x
     def fixed_learnable_downsample(self, features,boxes, out_shape=(7,7),kernel_size=(1,3,3),strides=(1,1,1),device=None):
-        # start edit 3
-        #mask_omit = torch.ones((boxes.shape[0]),dtype=torch.bool,device=device)
-        #result_x = torch.zeros(features.size(),dtype=torch.float,device=device)
-        #result_box = torch.zeros(boxes.size(),device=device,dtype=torch.long)
-        #N,c,m,n = features.shape
+        
         features = torch.unsqueeze(features,2)
         features_ = features
         boxes_ = boxes
