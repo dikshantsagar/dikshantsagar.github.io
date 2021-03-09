@@ -146,10 +146,8 @@ class ROIPooler(nn.Module):
         self.output_size = output_size
         self.fixed = fixed
 
-        ######
-        self.inlayer = nn.Conv3d(1,256,kernel_size=(1,3,3),stride=(1,1,1),padding=0, bias=False)
-        self.reclayer = nn.Conv3d(256, 1, kernel_size=(1,1,1), stride=(1,1,1), padding=0, bias=False)
-        ######
+        self.reclayer = nn.Conv2d(256, 256*2, kernel_size=(3,3), stride=(1,1), bias = False)
+        self.outlayer = nn.Conv2d(256*2, 256, kernel_size=(1,1), bias=False)
 
         if pooler_type == "ROIAlign":
             self.level_poolers = nn.ModuleList(
@@ -294,30 +292,29 @@ class ROIPooler(nn.Module):
         wout = self.outShape(win,strides[1],kernel[1]) + 2
         return hout,wout
     def rcConv(self,x,box_x):
-        x = self.inlayer(x)
-        x = self.reclayer(x)
+        self.reclayer.weight = self.reclayer.weight[0].tile((self.reclayer.weight.shape[0],1,1,1))
+        x1 = self.reclayer(x)
+        x1 = self.outlayer(x1)
         #x1 = padding(x1)
         box_x[:,-1],box_x[:,-2] = self.hwOut(box_x[:,-1],box_x[:,-2],strides=(1,1),kernel=(3,3))
         #make box changes
-        return x,box_x
-    def fixed_learnable_downsample(self, features,boxes, out_shape=(7,7),kernel_size=(1,3,3),strides=(1,1,1),device=None):
+        return x1,box_x
+    def fixed_learnable_downsample(self, features,boxes, out_shape=(7,7),kernel_size=(3,3),strides=(1,1),device=None):
         
-        features = torch.unsqueeze(features,2)
         features_ = features
         boxes_ = boxes
         indexes = torch.arange(boxes.shape[0])
-
         while indexes.shape[0]>0:
             mask = torch.logical_and(
-                self.outShape(boxes_[:,-1],strides[1],kernel_size[1]) > out_shape[0],
-                self.outShape(boxes_[:,-2],strides[2],kernel_size[2]) > out_shape[1]
+                self.outShape(boxes_[:,-1],strides[0],kernel_size[0]) > out_shape[0],
+                self.outShape(boxes_[:,-2],strides[1],kernel_size[1]) > out_shape[1]
             )
             mask_not = torch.logical_not(mask)
             indexes_ = indexes[mask]
             finalized =  indexes[mask_not]
             # port finalized to results
-            features[finalized,:,:,:features_.shape[3],:features_.shape[4]] = features_[mask_not,:,:,:,:]
+            features[finalized,:,:features_.shape[2],:features_.shape[3]] = features_[mask_not,:,:,:]
             boxes[finalized,:] = boxes_[mask_not,:]
             features_,boxes_ = self.rcConv(features_[mask],boxes_[mask])
             indexes = indexes_
-        return torch.squeeze(features), boxes
+        return features, boxes
