@@ -109,7 +109,6 @@ class ROIPooler(nn.Module):
         pooler_type,
         canonical_box_size=224,
         canonical_level=4,
-        fixed=True,
     ):
         """
         Args:
@@ -144,10 +143,6 @@ class ROIPooler(nn.Module):
         assert len(output_size) == 2
         assert isinstance(output_size[0], int) and isinstance(output_size[1], int)
         self.output_size = output_size
-        self.fixed = fixed
-
-        self.reclayer = nn.Conv2d(256, 256*2, kernel_size=(3,3), stride=(1,1), bias = False)
-        self.outlayer = nn.Conv2d(256*2, 256, kernel_size=(1,1), bias=False)
 
         if pooler_type == "ROIAlign":
             self.level_poolers = nn.ModuleList(
@@ -242,79 +237,46 @@ class ROIPooler(nn.Module):
         output_size = self.output_size[0]
 
         dtype, device = x[0].dtype, x[0].device
-        output = torch.zeros((num_boxes, num_channels, output_size, output_size), dtype=dtype, device=device)
+        
 
-        for level, pooler in enumerate(self.level_poolers):
-            inds = nonzero_tuple(level_assignments == level)[0]
 
-            boxes = pooler_fmt_boxes[inds]
-            scale = pooler.spatial_scale
-            boxes[:,1:3] = torch.floor(boxes[:,1:3]*scale)
-            boxes[:,3:5] = torch.ceil(boxes[:,3:5]*scale)
-            boxes = boxes.to(device=device,dtype=torch.long)
+        boxes = pooler_fmt_boxes
+        scales = []
+        for i in range(boxes.shape[0]):
+            scales.append(self.level_poolers[level_assignments[i]].spatial_scale)
+        scale = torch.tensor(scales)
+        boxes[:,1:3] = torch.floor(boxes[:,1:3]*scale)
+        boxes[:,3:5] = torch.ceil(boxes[:,3:5]*scale)
+        boxes = boxes.to(device=device,dtype=torch.long)
 
-            feats = x[level]
+        boxes[boxes[:,1]< 0,1] = 0
+        boxes[boxes[:,2]< 0,2] = 0
 
-            # replacing the below for loop
-            boxes[boxes[:,1]< 0,1] = 0
-            boxes[boxes[:,2]< 0,2] = 0
-            
-            boxes[boxes[:,3] >= feats[0].shape[-1],3] = feats[0].shape[-1]-1
-            boxes[boxes[:,4] >= feats[0].shape[-2],4] = feats[0].shape[-2]-1
-            mask = torch.logical_and((boxes[:,3]-boxes[:,1]) > 1,(boxes[:,4]-boxes[:,2]) > 1)
-            #boxes=boxes[mask]
-            if boxes.shape[0] < 1:
-                continue
-            
-            height = boxes[:,4] - boxes[:,2] + 1
-            width = boxes[:,3] - boxes[:,1] + 1
-            max_h,max_w = torch.max(torch.max(height),0)[0], torch.max(torch.max(width),0)[0]
-            max_h,max_w = torch.max(torch.tensor([max_h,3])), torch.max(torch.tensor([max_w,3]))
-            crops = torch.zeros((boxes.shape[0],256,max_h,max_w),device=device,dtype=torch.float32)
-            for i in  range(boxes.shape[0]): 
-                ind,x0,y0,x1,y1 = boxes[i]
-                crops[i,:,:y1-y0+1,:x1-x0+1] = feats[ind][:,y0:y1+1,x0:x1+1]
-            boxes[:,0] = torch.arange(boxes.shape[0]) ## i changes this from 0
-            boxes[:,3:5] -= boxes[:,1:3]
-            boxes[:,1:3] = 0
-            
-            if self.fixed:
-                crops,boxes = self.fixed_learnable_downsample(crops,boxes, out_shape=self.output_size, device=device)
-                output[inds] = pooler(crops,boxes,1.0)
+        #boxes[boxes[:,3] >= feats[0].shape[-1],3] = feats[0].shape[-1]-1
+        #boxes[boxes[:,4] >= feats[0].shape[-2],4] = feats[0].shape[-2]-1
+        mask = torch.logical_and((boxes[:,3]-boxes[:,1]) > 1,(boxes[:,4]-boxes[:,2]) > 1)
+        height = boxes[:,4] - boxes[:,2] + 1
+        width = boxes[:,3] - boxes[:,1] + 1
+        max_h,max_w = torch.max(torch.max(height),0)[0], torch.max(torch.max(width),0)[0]
+        max_h,max_w = torch.max(torch.tensor([max_h,3])), torch.max(torch.tensor([max_w,3]))
+        output = torch.zeros(
+            (num_boxes, num_channels, max_h, max_w), dtype=dtype, device=device
+        )
         
         
-        return output
-    def outShape(self,x,stride,kernel):
-        x_out = torch.floor((x-kernel)/(stride*1.0)+1) - 2
-        return x_out.type(torch.int32)
-    def hwOut(self,hin,win,strides=(1,1),kernel=(3,3)):
-        hout = self.outShape(hin,strides[0],kernel[0]) + 2
-        wout = self.outShape(win,strides[1],kernel[1]) + 2
-        return hout,wout
-    def rcConv(self,x,box_x):
-        self.reclayer.weight = self.reclayer.weight[0].tile((self.reclayer.weight.shape[0],1,1,1))
-        x1 = self.reclayer(x)
-        x1 = self.outlayer(x1)
-        #x1 = padding(x1)
-        box_x[:,-1],box_x[:,-2] = self.hwOut(box_x[:,-1],box_x[:,-2],strides=(1,1),kernel=(3,3))
-        #make box changes
-        return x1,box_x
-    def fixed_learnable_downsample(self, features,boxes, out_shape=(7,7),kernel_size=(3,3),strides=(1,1),device=None):
-        
-        features_ = features
-        boxes_ = boxes
-        indexes = torch.arange(boxes.shape[0])
-        while indexes.shape[0]>0:
-            mask = torch.logical_and(
-                self.outShape(boxes_[:,-1],strides[0],kernel_size[0]) > out_shape[0],
-                self.outShape(boxes_[:,-2],strides[1],kernel_size[1]) > out_shape[1]
-            )
-            mask_not = torch.logical_not(mask)
-            indexes_ = indexes[mask]
-            finalized =  indexes[mask_not]
-            # port finalized to results
-            features[finalized,:,:features_.shape[2],:features_.shape[3]] = features_[mask_not,:,:,:]
-            boxes[finalized,:] = boxes_[mask_not,:]
-            features_,boxes_ = self.rcConv(features_[mask],boxes_[mask])
-            indexes = indexes_
-        return features, boxes
+        for i in range(boxes.shape[0]):
+            ind,x0,y0,x1,y1 = boxes[i]
+            print(x1,x[level_assignments[i]][0].shape[-1]-1)
+            x1 = torch.min(x1,x[level_assignments[i]][0].shape[-1]-1)
+            y1 = torch.min(y1,x[level_assignments[i]][0].shape[-2]-1)
+            boxes[i] = ind,x0,y0,x1,y1
+            output[i,:,:y1-y0+1,:x1-x0+1] = x[level_assignments[i]][ind][:,y0:y1+1,x0:x1+1]
+
+        boxes[:,0] = torch.arange(boxes.shape[0]) ## i changes this from 0
+        boxes[:,3:5] -= boxes[:,1:3]
+        boxes[:,1:3] = 0
+
+
+        return output, boxes
+
+
