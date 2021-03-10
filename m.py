@@ -275,8 +275,8 @@ class ROIPooler(nn.Module):
         boxes[:,0] = torch.arange(boxes.shape[0]) ## i changes this from 0
         boxes[:,3:5] -= boxes[:,1:3]
         boxes[:,1:3] = 0
-
-
+        
+        
         return output, boxes
 
 
