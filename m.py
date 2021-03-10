@@ -1,304 +1,474 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
-from typing import List
-import fvcore.nn.weight_init as weight_init
+import copy
+import itertools
+import numpy as np
+from typing import Any, Iterator, List, Union
+import pycocotools.mask as mask_util
 import torch
-from torch import nn
-from torch.nn import functional as F
 
-from detectron2.config import configurable
-from detectron2.layers import Conv2d, ConvTranspose2d, ShapeSpec, cat, get_norm
-from detectron2.structures import Instances
-from detectron2.utils.events import get_event_storage
-from detectron2.utils.registry import Registry
+from detectron2.layers.roi_align import ROIAlign
 
-__all__ = [
-    "BaseMaskRCNNHead",
-    "MaskRCNNConvUpsampleHead",
-    "build_mask_head",
-    "ROI_MASK_HEAD_REGISTRY",
-]
+from .boxes import Boxes
 
 
-ROI_MASK_HEAD_REGISTRY = Registry("ROI_MASK_HEAD")
-ROI_MASK_HEAD_REGISTRY.__doc__ = """
-Registry for mask heads, which predicts instance masks given
-per-region features.
-
-The registered object will be called with `obj(cfg, input_shape)`.
-"""
+def polygon_area(x, y):
+    # Using the shoelace formula
+    # https://stackoverflow.com/questions/24467972/calculate-area-of-polygon-given-x-y-coordinates
+    return 0.5 * np.abs(np.dot(x, np.roll(y, 1)) - np.dot(y, np.roll(x, 1)))
 
 
-@torch.jit.unused
-def mask_rcnn_loss(pred_mask_logits: torch.Tensor, instances: List[Instances], vis_period: int = 0):
+def polygons_to_bitmask(polygons: List[np.ndarray], height: int, width: int) -> np.ndarray:
     """
-    Compute the mask prediction loss defined in the Mask R-CNN paper.
-
     Args:
-        pred_mask_logits (Tensor): A tensor of shape (B, C, Hmask, Wmask) or (B, 1, Hmask, Wmask)
-            for class-specific or class-agnostic, where B is the total number of predicted masks
-            in all images, C is the number of foreground classes, and Hmask, Wmask are the height
-            and width of the mask predictions. The values are logits.
-        instances (list[Instances]): A list of N Instances, where N is the number of images
-            in the batch. These instances are in 1:1
-            correspondence with the pred_mask_logits. The ground-truth labels (class, box, mask,
-            ...) associated with each instance are stored in fields.
-        vis_period (int): the period (in steps) to dump visualization.
+        polygons (list[ndarray]): each array has shape (Nx2,)
+        height, width (int)
 
     Returns:
-        mask_loss (Tensor): A scalar tensor containing the loss.
+        ndarray: a bool mask of shape (height, width)
     """
-    pred_mask_logits = pred_mask_logits[0]
-    boxes = pred_mask_logits[1]
-    cls_agnostic_mask = pred_mask_logits.size(1) == 1
-    total_num_masks = pred_mask_logits.size(0)
-    mask_side_len = pred_mask_logits.size(2)
-    assert pred_mask_logits.size(2) == pred_mask_logits.size(3), "Mask prediction must be square!"
-
-    gt_classes = []
-    gt_masks = []
-    for instances_per_image in instances:
-        if len(instances_per_image) == 0:
-            continue
-        if not cls_agnostic_mask:
-            gt_classes_per_image = instances_per_image.gt_classes.to(dtype=torch.int64)
-            gt_classes.append(gt_classes_per_image)
-
-        gt_masks_per_image = instances_per_image.gt_masks.crop_and_resize(
-            instances_per_image.proposal_boxes.tensor, mask_side_len
-        ).to(device=pred_mask_logits.device)
-        # A tensor of shape (N, M, M), N=#instances in the image; M=mask_side_len
-        gt_masks.append(gt_masks_per_image)
-
-    if len(gt_masks) == 0:
-        return pred_mask_logits.sum() * 0
-
-    gt_masks = cat(gt_masks, dim=0)
-
-    if cls_agnostic_mask:
-        pred_mask_logits = pred_mask_logits[:, 0]
-    else:
-        indices = torch.arange(total_num_masks)
-        gt_classes = cat(gt_classes, dim=0)
-        pred_mask_logits = pred_mask_logits[indices, gt_classes]
-
-    if gt_masks.dtype == torch.bool:
-        gt_masks_bool = gt_masks
-    else:
-        # Here we allow gt_masks to be float as well (depend on the implementation of rasterize())
-        gt_masks_bool = gt_masks > 0.5
-    gt_masks = gt_masks.to(dtype=torch.float32)
-
-    height = boxes[:,4] + 1
-    width = boxes[:,3] + 1
-    max_h,max_w = torch.max(torch.max(height),0)[0], torch.max(torch.max(width),0)[0]
-    max_h,max_w = torch.max(torch.tensor([max_h,3])), torch.max(torch.tensor([max_w,3]))
-    gt_tensor = torch.zeros((pred_mask_logits.shape[0],max_h,max_w),device=pred_mask_logits.device,dtype=torch.float32)
-    for i in range(pred_mask_logits.shape[0]):
-        _,_,_,x,y = boxes[i]
-        gt_tensor[i,:,:y,:x] = gt_masks[i].crop_and_resize_mod([0,0,28,28],(x,y))
-    
-    gt_masks_bool = gt_tensor
-
-    # Log the training accuracy (using gt classes and 0.5 threshold)
-    mask_incorrect = (pred_mask_logits > 0.0) != gt_masks_bool
-    mask_accuracy = 1 - (mask_incorrect.sum().item() / max(mask_incorrect.numel(), 1.0))
-    num_positive = gt_masks_bool.sum().item()
-    false_positive = (mask_incorrect & ~gt_masks_bool).sum().item() / max(
-        gt_masks_bool.numel() - num_positive, 1.0
-    )
-    false_negative = (mask_incorrect & gt_masks_bool).sum().item() / max(num_positive, 1.0)
-
-    storage = get_event_storage()
-    storage.put_scalar("mask_rcnn/accuracy", mask_accuracy)
-    storage.put_scalar("mask_rcnn/false_positive", false_positive)
-    storage.put_scalar("mask_rcnn/false_negative", false_negative)
-    if vis_period > 0 and storage.iter % vis_period == 0:
-        pred_masks = pred_mask_logits.sigmoid()
-        vis_masks = torch.cat([pred_masks, gt_masks], axis=2)
-        name = "Left: mask prediction;   Right: mask GT"
-        for idx, vis_mask in enumerate(vis_masks):
-            vis_mask = torch.stack([vis_mask] * 3, axis=0)
-            storage.put_image(name + f" ({idx})", vis_mask)
-    
-    mask_loss = F.binary_cross_entropy_with_logits(pred_mask_logits, gt_tensor, reduction="mean")
-    return mask_loss
+    assert len(polygons) > 0, "COCOAPI does not support empty polygons"
+    rles = mask_util.frPyObjects(polygons, height, width)
+    rle = mask_util.merge(rles)
+    return mask_util.decode(rle).astype(np.bool)
 
 
-def mask_rcnn_inference(pred_mask_logits: torch.Tensor, pred_instances: List[Instances]):
+def rasterize_polygons_within_box(
+    polygons: List[np.ndarray], box: np.ndarray, mask_size: int
+) -> torch.Tensor:
     """
-    Convert pred_mask_logits to estimated foreground probability masks while also
-    extracting only the masks for the predicted classes in pred_instances. For each
-    predicted box, the mask of the same class is attached to the instance by adding a
-    new "pred_masks" field to pred_instances.
+    Rasterize the polygons into a mask image and
+    crop the mask content in the given box.
+    The cropped mask is resized to (mask_size, mask_size).
+
+    This function is used when generating training targets for mask head in Mask R-CNN.
+    Given original ground-truth masks for an image, new ground-truth mask
+    training targets in the size of `mask_size x mask_size`
+    must be provided for each predicted box. This function will be called to
+    produce such targets.
 
     Args:
-        pred_mask_logits (Tensor): A tensor of shape (B, C, Hmask, Wmask) or (B, 1, Hmask, Wmask)
-            for class-specific or class-agnostic, where B is the total number of predicted masks
-            in all images, C is the number of foreground classes, and Hmask, Wmask are the height
-            and width of the mask predictions. The values are logits.
-        pred_instances (list[Instances]): A list of N Instances, where N is the number of images
-            in the batch. Each Instances must have field "pred_classes".
+        polygons (list[ndarray[float]]): a list of polygons, which represents an instance.
+        box: 4-element numpy array
+        mask_size (int):
 
     Returns:
-        None. pred_instances will contain an extra "pred_masks" field storing a mask of size (Hmask,
-            Wmask) for predicted class. Note that the masks are returned as a soft (non-quantized)
-            masks the resolution predicted by the network; post-processing steps, such as resizing
-            the predicted masks to the original image resolution and/or binarizing them, is left
-            to the caller.
+        Tensor: BoolTensor of shape (mask_size, mask_size)
     """
-    cls_agnostic_mask = pred_mask_logits.size(1) == 1
+    # 1. Shift the polygons w.r.t the boxes
+    w, h = box[2] - box[0], box[3] - box[1]
 
-    if cls_agnostic_mask:
-        mask_probs_pred = pred_mask_logits.sigmoid()
+    polygons = copy.deepcopy(polygons)
+    for p in polygons:
+        p[0::2] = p[0::2] - box[0]
+        p[1::2] = p[1::2] - box[1]
+
+    # 2. Rescale the polygons to the new box size
+    # max() to avoid division by small number
+    ratio_h = mask_size / max(h, 0.1)
+    ratio_w = mask_size / max(w, 0.1)
+
+    if ratio_h == ratio_w:
+        for p in polygons:
+            p *= ratio_h
     else:
-        # Select masks corresponding to the predicted classes
-        num_masks = pred_mask_logits.shape[0]
-        class_pred = cat([i.pred_classes for i in pred_instances])
-        indices = torch.arange(num_masks, device=class_pred.device)
-        mask_probs_pred = pred_mask_logits[indices, class_pred][:, None].sigmoid()
-    # mask_probs_pred.shape: (B, 1, Hmask, Wmask)
+        for p in polygons:
+            p[0::2] *= ratio_w
+            p[1::2] *= ratio_h
 
-    num_boxes_per_image = [len(i) for i in pred_instances]
-    mask_probs_pred = mask_probs_pred.split(num_boxes_per_image, dim=0)
-
-    for prob, instances in zip(mask_probs_pred, pred_instances):
-        instances.pred_masks = prob  # (1, Hmask, Wmask)
+    # 3. Rasterize the polygons with coco api
+    mask = polygons_to_bitmask(polygons, mask_size, mask_size)
+    mask = torch.from_numpy(mask)
+    return mask
 
 
-class BaseMaskRCNNHead(nn.Module):
+class BitMasks:
     """
-    Implement the basic Mask R-CNN losses and inference logic described in :paper:`Mask R-CNN`
+    This class stores the segmentation masks for all objects in one image, in
+    the form of bitmaps.
+
+    Attributes:
+        tensor: bool Tensor of N,H,W, representing N instances in the image.
     """
 
-    @configurable
-    def __init__(self, *, vis_period=0):
-        """
-        NOTE: this interface is experimental.
-
-        Args:
-            vis_period (int): visualization period
-        """
-        super().__init__()
-        self.vis_period = vis_period
-
-    @classmethod
-    def from_config(cls, cfg, input_shape):
-        return {"vis_period": cfg.VIS_PERIOD}
-
-    def forward(self, x, instances: List[Instances]):
+    def __init__(self, tensor: Union[torch.Tensor, np.ndarray]):
         """
         Args:
-            x: input region feature(s) provided by :class:`ROIHeads`.
-            instances (list[Instances]): contains the boxes & labels corresponding
-                to the input features.
-                Exact format is up to its caller to decide.
-                Typically, this is the foreground instances in training, with
-                "proposal_boxes" field and other gt annotations.
-                In inference, it contains boxes that are already predicted.
+            tensor: bool Tensor of N,H,W, representing N instances in the image.
+        """
+        device = tensor.device if isinstance(tensor, torch.Tensor) else torch.device("cpu")
+        tensor = torch.as_tensor(tensor, dtype=torch.bool, device=device)
+        assert tensor.dim() == 3, tensor.size()
+        self.image_size = tensor.shape[1:]
+        self.tensor = tensor
+
+    def to(self, *args: Any, **kwargs: Any) -> "BitMasks":
+        return BitMasks(self.tensor.to(*args, **kwargs))
+
+    @property
+    def device(self) -> torch.device:
+        return self.tensor.device
+
+    def __getitem__(self, item: Union[int, slice, torch.BoolTensor]) -> "BitMasks":
+        """
+        Returns:
+            BitMasks: Create a new :class:`BitMasks` by indexing.
+
+        The following usage are allowed:
+
+        1. `new_masks = masks[3]`: return a `BitMasks` which contains only one mask.
+        2. `new_masks = masks[2:10]`: return a slice of masks.
+        3. `new_masks = masks[vector]`, where vector is a torch.BoolTensor
+           with `length = len(masks)`. Nonzero elements in the vector will be selected.
+
+        Note that the returned object might share storage with this object,
+        subject to Pytorch's indexing semantics.
+        """
+        if isinstance(item, int):
+            return BitMasks(self.tensor[item].view(1, -1))
+        m = self.tensor[item]
+        assert m.dim() == 3, "Indexing on BitMasks with {} returns a tensor with shape {}!".format(
+            item, m.shape
+        )
+        return BitMasks(m)
+
+    def __iter__(self) -> torch.Tensor:
+        yield from self.tensor
+
+    def __repr__(self) -> str:
+        s = self.__class__.__name__ + "("
+        s += "num_instances={})".format(len(self.tensor))
+        return s
+
+    def __len__(self) -> int:
+        return self.tensor.shape[0]
+
+    def nonempty(self) -> torch.Tensor:
+        """
+        Find masks that are non-empty.
 
         Returns:
-            A dict of losses in training. The predicted "instances" in inference.
+            Tensor: a BoolTensor which represents
+                whether each mask is empty (False) or non-empty (True).
         """
-        boxes = x[1]
-        x = self.layers(x[0])
-        if self.training:
-            return {"loss_mask": mask_rcnn_loss((x,boxes), instances, self.vis_period)}
-        else:
-            mask_rcnn_inference(x, instances)
-            return instances
+        return self.tensor.flatten(1).any(dim=1)
 
-    def layers(self, x):
+    @staticmethod
+    def from_polygon_masks(
+        polygon_masks: Union["PolygonMasks", List[List[np.ndarray]]], height: int, width: int
+    ) -> "BitMasks":
         """
-        Neural network layers that makes predictions from input features.
+        Args:
+            polygon_masks (list[list[ndarray]] or PolygonMasks)
+            height, width (int)
         """
-        raise NotImplementedError
+        if isinstance(polygon_masks, PolygonMasks):
+            polygon_masks = polygon_masks.polygons
+        masks = [polygons_to_bitmask(p, height, width) for p in polygon_masks]
+        return BitMasks(torch.stack([torch.from_numpy(x) for x in masks]))
 
-
-# To get torchscript support, we make the head a subclass of `nn.Sequential`.
-# Therefore, to add new layers in this head class, please make sure they are
-# added in the order they will be used in forward().
-@ROI_MASK_HEAD_REGISTRY.register()
-class MaskRCNNConvUpsampleHead(BaseMaskRCNNHead, nn.Sequential):
-    """
-    A mask head with several conv layers, plus an upsample layer (with `ConvTranspose2d`).
-    Predictions are made with a final 1x1 conv layer.
-    """
-
-    @configurable
-    def __init__(self, input_shape: ShapeSpec, *, num_classes, conv_dims, conv_norm="", **kwargs):
+    def crop_and_resize(self, boxes: torch.Tensor, mask_size: int) -> torch.Tensor:
         """
-        NOTE: this interface is experimental.
+        Crop each bitmask by the given box, and resize results to (mask_size, mask_size).
+        This can be used to prepare training targets for Mask R-CNN.
+        It has less reconstruction error compared to rasterization with polygons.
+        However we observe no difference in accuracy,
+        but BitMasks requires more memory to store all the masks.
 
         Args:
-            input_shape (ShapeSpec): shape of the input feature
-            num_classes (int): the number of foreground classes (i.e. background is not
-                included). 1 if using class agnostic prediction.
-            conv_dims (list[int]): a list of N>0 integers representing the output dimensions
-                of N-1 conv layers and the last upsample layer.
-            conv_norm (str or callable): normalization for the conv layers.
-                See :func:`detectron2.layers.get_norm` for supported types.
+            boxes (Tensor): Nx4 tensor storing the boxes for each mask
+            mask_size (int): the size of the rasterized mask.
+
+        Returns:
+            Tensor:
+                A bool tensor of shape (N, mask_size, mask_size), where
+                N is the number of predicted boxes for this image.
         """
-        super().__init__(**kwargs)
-        assert len(conv_dims) >= 1, "conv_dims have to be non-empty!"
+        assert len(boxes) == len(self), "{} != {}".format(len(boxes), len(self))
+        device = self.tensor.device
 
-        self.conv_norm_relus = []
+        batch_inds = torch.arange(len(boxes), device=device).to(dtype=boxes.dtype)[:, None]
+        rois = torch.cat([batch_inds, boxes], dim=1)  # Nx5
 
-        cur_channels = input_shape.channels
-        for k, conv_dim in enumerate(conv_dims[:-1]):
-            conv = Conv2d(
-                cur_channels,
-                conv_dim,
-                kernel_size=3,
-                stride=1,
-                padding=1,
-                bias=not conv_norm,
-                norm=get_norm(conv_norm, conv_dim),
-                activation=nn.ReLU(),
+        bit_masks = self.tensor.to(dtype=torch.float32)
+        rois = rois.to(device=device)
+        output = (
+            ROIAlign((mask_size, mask_size), 1.0, 0, aligned=True)
+            .forward(bit_masks[:, None, :, :], rois)
+            .squeeze(1)
+        )
+        output = output >= 0.5
+        return output
+    
+    def crop_and_resize_mod(self, boxes: torch.Tensor, mask_size: int) -> torch.Tensor:
+        """
+        Crop each bitmask by the given box, and resize results to (mask_size, mask_size).
+        This can be used to prepare training targets for Mask R-CNN.
+        It has less reconstruction error compared to rasterization with polygons.
+        However we observe no difference in accuracy,
+        but BitMasks requires more memory to store all the masks.
+
+        Args:
+            boxes (Tensor): Nx4 tensor storing the boxes for each mask
+            mask_size (int): the size of the rasterized mask.
+
+        Returns:
+            Tensor:
+                A bool tensor of shape (N, mask_size, mask_size), where
+                N is the number of predicted boxes for this image.
+        """
+        assert len(boxes) == len(self), "{} != {}".format(len(boxes), len(self))
+        device = self.tensor.device
+
+        batch_inds = torch.arange(len(boxes), device=device).to(dtype=boxes.dtype)[:, None]
+        rois = torch.cat([batch_inds, boxes], dim=1)  # Nx5
+
+        bit_masks = self.tensor.to(dtype=torch.float32)
+        rois = rois.to(device=device)
+        output = (
+            ROIAlign(mask_size, 1.0, 0, aligned=True)
+            .forward(bit_masks[:, None, :, :], rois)
+            .squeeze(1)
+        )
+        output = output >= 0.5
+        return output
+
+    def get_bounding_boxes(self) -> Boxes:
+        """
+        Returns:
+            Boxes: tight bounding boxes around bitmasks.
+            If a mask is empty, it's bounding box will be all zero.
+        """
+        boxes = torch.zeros(self.tensor.shape[0], 4, dtype=torch.float32)
+        x_any = torch.any(self.tensor, dim=1)
+        y_any = torch.any(self.tensor, dim=2)
+        for idx in range(self.tensor.shape[0]):
+            x = torch.where(x_any[idx, :])[0]
+            y = torch.where(y_any[idx, :])[0]
+            if len(x) > 0 and len(y) > 0:
+                boxes[idx, :] = torch.as_tensor(
+                    [x[0], y[0], x[-1] + 1, y[-1] + 1], dtype=torch.float32
+                )
+        return Boxes(boxes)
+
+    @staticmethod
+    def cat(bitmasks_list: List["BitMasks"]) -> "BitMasks":
+        """
+        Concatenates a list of BitMasks into a single BitMasks
+
+        Arguments:
+            bitmasks_list (list[BitMasks])
+
+        Returns:
+            BitMasks: the concatenated BitMasks
+        """
+        assert isinstance(bitmasks_list, (list, tuple))
+        assert len(bitmasks_list) > 0
+        assert all(isinstance(bitmask, BitMasks) for bitmask in bitmasks_list)
+
+        cat_bitmasks = type(bitmasks_list[0])(torch.cat([bm.tensor for bm in bitmasks_list], dim=0))
+        return cat_bitmasks
+
+
+class PolygonMasks:
+    """
+    This class stores the segmentation masks for all objects in one image, in the form of polygons.
+
+    Attributes:
+        polygons: list[list[ndarray]]. Each ndarray is a float64 vector representing a polygon.
+    """
+
+    def __init__(self, polygons: List[List[Union[torch.Tensor, np.ndarray]]]):
+        """
+        Arguments:
+            polygons (list[list[np.ndarray]]): The first
+                level of the list correspond to individual instances,
+                the second level to all the polygons that compose the
+                instance, and the third level to the polygon coordinates.
+                The third level array should have the format of
+                [x0, y0, x1, y1, ..., xn, yn] (n >= 3).
+        """
+        if not isinstance(polygons, list):
+            raise ValueError(
+                "Cannot create PolygonMasks: Expect a list of list of polygons per image. "
+                "Got '{}' instead.".format(type(polygons))
             )
-            self.add_module("mask_fcn{}".format(k + 1), conv)
-            self.conv_norm_relus.append(conv)
-            cur_channels = conv_dim
 
-        self.deconv = ConvTranspose2d(
-            cur_channels, conv_dims[-1], kernel_size=2, stride=2, padding=0
+        def _make_array(t: Union[torch.Tensor, np.ndarray]) -> np.ndarray:
+            # Use float64 for higher precision, because why not?
+            # Always put polygons on CPU (self.to is a no-op) since they
+            # are supposed to be small tensors.
+            # May need to change this assumption if GPU placement becomes useful
+            if isinstance(t, torch.Tensor):
+                t = t.cpu().numpy()
+            return np.asarray(t).astype("float64")
+
+        def process_polygons(
+            polygons_per_instance: List[Union[torch.Tensor, np.ndarray]]
+        ) -> List[np.ndarray]:
+            if not isinstance(polygons_per_instance, list):
+                raise ValueError(
+                    "Cannot create polygons: Expect a list of polygons per instance. "
+                    "Got '{}' instead.".format(type(polygons_per_instance))
+                )
+            # transform each polygon to a numpy array
+            polygons_per_instance = [_make_array(p) for p in polygons_per_instance]
+            for polygon in polygons_per_instance:
+                if len(polygon) % 2 != 0 or len(polygon) < 6:
+                    raise ValueError(f"Cannot create a polygon from {len(polygon)} coordinates.")
+            return polygons_per_instance
+
+        self.polygons: List[List[np.ndarray]] = [
+            process_polygons(polygons_per_instance) for polygons_per_instance in polygons
+        ]
+
+    def to(self, *args: Any, **kwargs: Any) -> "PolygonMasks":
+        return self
+
+    @property
+    def device(self) -> torch.device:
+        return torch.device("cpu")
+
+    def get_bounding_boxes(self) -> Boxes:
+        """
+        Returns:
+            Boxes: tight bounding boxes around polygon masks.
+        """
+        boxes = torch.zeros(len(self.polygons), 4, dtype=torch.float32)
+        for idx, polygons_per_instance in enumerate(self.polygons):
+            minxy = torch.as_tensor([float("inf"), float("inf")], dtype=torch.float32)
+            maxxy = torch.zeros(2, dtype=torch.float32)
+            for polygon in polygons_per_instance:
+                coords = torch.from_numpy(polygon).view(-1, 2).to(dtype=torch.float32)
+                minxy = torch.min(minxy, torch.min(coords, dim=0).values)
+                maxxy = torch.max(maxxy, torch.max(coords, dim=0).values)
+            boxes[idx, :2] = minxy
+            boxes[idx, 2:] = maxxy
+        return Boxes(boxes)
+
+    def nonempty(self) -> torch.Tensor:
+        """
+        Find masks that are non-empty.
+
+        Returns:
+            Tensor:
+                a BoolTensor which represents whether each mask is empty (False) or not (True).
+        """
+        keep = [1 if len(polygon) > 0 else 0 for polygon in self.polygons]
+        return torch.from_numpy(np.asarray(keep, dtype=np.bool))
+
+    def __getitem__(self, item: Union[int, slice, List[int], torch.BoolTensor]) -> "PolygonMasks":
+        """
+        Support indexing over the instances and return a `PolygonMasks` object.
+        `item` can be:
+
+        1. An integer. It will return an object with only one instance.
+        2. A slice. It will return an object with the selected instances.
+        3. A list[int]. It will return an object with the selected instances,
+           correpsonding to the indices in the list.
+        4. A vector mask of type BoolTensor, whose length is num_instances.
+           It will return an object with the instances whose mask is nonzero.
+        """
+        if isinstance(item, int):
+            selected_polygons = [self.polygons[item]]
+        elif isinstance(item, slice):
+            selected_polygons = self.polygons[item]
+        elif isinstance(item, list):
+            selected_polygons = [self.polygons[i] for i in item]
+        elif isinstance(item, torch.Tensor):
+            # Polygons is a list, so we have to move the indices back to CPU.
+            if item.dtype == torch.bool:
+                assert item.dim() == 1, item.shape
+                item = item.nonzero().squeeze(1).cpu().numpy().tolist()
+            elif item.dtype in [torch.int32, torch.int64]:
+                item = item.cpu().numpy().tolist()
+            else:
+                raise ValueError("Unsupported tensor dtype={} for indexing!".format(item.dtype))
+            selected_polygons = [self.polygons[i] for i in item]
+        return PolygonMasks(selected_polygons)
+
+    def __iter__(self) -> Iterator[List[np.ndarray]]:
+        """
+        Yields:
+            list[ndarray]: the polygons for one instance.
+            Each Tensor is a float64 vector representing a polygon.
+        """
+        return iter(self.polygons)
+
+    def __repr__(self) -> str:
+        s = self.__class__.__name__ + "("
+        s += "num_instances={})".format(len(self.polygons))
+        return s
+
+    def __len__(self) -> int:
+        return len(self.polygons)
+
+    def crop_and_resize(self, boxes: torch.Tensor, mask_size: int) -> torch.Tensor:
+        """
+        Crop each mask by the given box, and resize results to (mask_size, mask_size).
+        This can be used to prepare training targets for Mask R-CNN.
+
+        Args:
+            boxes (Tensor): Nx4 tensor storing the boxes for each mask
+            mask_size (int): the size of the rasterized mask.
+
+        Returns:
+            Tensor: A bool tensor of shape (N, mask_size, mask_size), where
+            N is the number of predicted boxes for this image.
+        """
+        assert len(boxes) == len(self), "{} != {}".format(len(boxes), len(self))
+
+        device = boxes.device
+        # Put boxes on the CPU, as the polygon representation is not efficient GPU-wise
+        # (several small tensors for representing a single instance mask)
+        boxes = boxes.to(torch.device("cpu"))
+
+        results = [
+            rasterize_polygons_within_box(poly, box.numpy(), mask_size)
+            for poly, box in zip(self.polygons, boxes)
+        ]
+        """
+        poly: list[list[float]], the polygons for one instance
+        box: a tensor of shape (4,)
+        """
+        if len(results) == 0:
+            return torch.empty(0, mask_size, mask_size, dtype=torch.bool, device=device)
+        return torch.stack(results, dim=0).to(device=device)
+
+    def area(self):
+        """
+        Computes area of the mask.
+        Only works with Polygons, using the shoelace formula:
+        https://stackoverflow.com/questions/24467972/calculate-area-of-polygon-given-x-y-coordinates
+
+        Returns:
+            Tensor: a vector, area for each instance
+        """
+
+        area = []
+        for polygons_per_instance in self.polygons:
+            area_per_instance = 0
+            for p in polygons_per_instance:
+                area_per_instance += polygon_area(p[0::2], p[1::2])
+            area.append(area_per_instance)
+
+        return torch.tensor(area)
+
+    @staticmethod
+    def cat(polymasks_list: List["PolygonMasks"]) -> "PolygonMasks":
+        """
+        Concatenates a list of PolygonMasks into a single PolygonMasks
+
+        Arguments:
+            polymasks_list (list[PolygonMasks])
+
+        Returns:
+            PolygonMasks: the concatenated PolygonMasks
+        """
+        assert isinstance(polymasks_list, (list, tuple))
+        assert len(polymasks_list) > 0
+        assert all(isinstance(polymask, PolygonMasks) for polymask in polymasks_list)
+
+        cat_polymasks = type(polymasks_list[0])(
+            list(itertools.chain.from_iterable(pm.polygons for pm in polymasks_list))
         )
-        self.add_module("deconv_relu", nn.ReLU())
-        cur_channels = conv_dims[-1]
-
-        self.predictor = Conv2d(cur_channels, num_classes, kernel_size=1, stride=1, padding=0)
-
-        for layer in self.conv_norm_relus + [self.deconv]:
-            weight_init.c2_msra_fill(layer)
-        # use normal distribution initialization for mask prediction layer
-        nn.init.normal_(self.predictor.weight, std=0.001)
-        if self.predictor.bias is not None:
-            nn.init.constant_(self.predictor.bias, 0)
-
-    @classmethod
-    def from_config(cls, cfg, input_shape):
-        ret = super().from_config(cfg, input_shape)
-        conv_dim = cfg.MODEL.ROI_MASK_HEAD.CONV_DIM
-        num_conv = cfg.MODEL.ROI_MASK_HEAD.NUM_CONV
-        ret.update(
-            conv_dims=[conv_dim] * (num_conv + 1),  # +1 for ConvTranspose
-            conv_norm=cfg.MODEL.ROI_MASK_HEAD.NORM,
-            input_shape=input_shape,
-        )
-        if cfg.MODEL.ROI_MASK_HEAD.CLS_AGNOSTIC_MASK:
-            ret["num_classes"] = 1
-        else:
-            ret["num_classes"] = cfg.MODEL.ROI_HEADS.NUM_CLASSES
-        return ret
-
-    def layers(self, x):
-        for layer in self:
-            x = layer(x)
-        return x
-
-
-def build_mask_head(cfg, input_shape):
-    """
-    Build a mask head defined by `cfg.MODEL.ROI_MASK_HEAD.NAME`.
-    """
-    name = cfg.MODEL.ROI_MASK_HEAD.NAME
-    return ROI_MASK_HEAD_REGISTRY.get(name)(cfg, input_shape)
+        return cat_polymasks
