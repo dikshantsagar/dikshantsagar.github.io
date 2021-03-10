@@ -1,278 +1,299 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
-import math
 from typing import List
+import fvcore.nn.weight_init as weight_init
 import torch
 from torch import nn
-from torchvision.ops import RoIPool
+from torch.nn import functional as F
 
-from detectron2.layers import ROIAlign, ROIAlignRotated, cat, nonzero_tuple
-from detectron2.structures import Boxes
+from detectron2.config import configurable
+from detectron2.layers import Conv2d, ConvTranspose2d, ShapeSpec, cat, get_norm
+from detectron2.structures import Instances
+from detectron2.utils.events import get_event_storage
+from detectron2.utils.registry import Registry
 
+__all__ = [
+    "BaseMaskRCNNHead",
+    "MaskRCNNConvUpsampleHead",
+    "build_mask_head",
+    "ROI_MASK_HEAD_REGISTRY",
+]
+
+
+ROI_MASK_HEAD_REGISTRY = Registry("ROI_MASK_HEAD")
+ROI_MASK_HEAD_REGISTRY.__doc__ = """
+Registry for mask heads, which predicts instance masks given
+per-region features.
+
+The registered object will be called with `obj(cfg, input_shape)`.
 """
-To export ROIPooler to torchscript, in this file, variables that should be annotated with
-`Union[List[Boxes], List[RotatedBoxes]]` are only annotated with `List[Boxes]`.
-
-TODO: Correct these annotations when torchscript support `Union`.
-https://github.com/pytorch/pytorch/issues/41412
-"""
-
-__all__ = ["ROIPooler"]
 
 
-def assign_boxes_to_levels(
-    box_lists: List[Boxes],
-    min_level: int,
-    max_level: int,
-    canonical_box_size: int,
-    canonical_level: int,
-):
+@torch.jit.unused
+def mask_rcnn_loss(pred_mask_logits: torch.Tensor, instances: List[Instances], vis_period: int = 0):
     """
-    Map each box in `box_lists` to a feature map level index and return the assignment
-    vector.
+    Compute the mask prediction loss defined in the Mask R-CNN paper.
 
     Args:
-        box_lists (list[Boxes] | list[RotatedBoxes]): A list of N Boxes or N RotatedBoxes,
-            where N is the number of images in the batch.
-        min_level (int): Smallest feature map level index. The input is considered index 0,
-            the output of stage 1 is index 1, and so.
-        max_level (int): Largest feature map level index.
-        canonical_box_size (int): A canonical box size in pixels (sqrt(box area)).
-        canonical_level (int): The feature map level index on which a canonically-sized box
-            should be placed.
+        pred_mask_logits (Tensor): A tensor of shape (B, C, Hmask, Wmask) or (B, 1, Hmask, Wmask)
+            for class-specific or class-agnostic, where B is the total number of predicted masks
+            in all images, C is the number of foreground classes, and Hmask, Wmask are the height
+            and width of the mask predictions. The values are logits.
+        instances (list[Instances]): A list of N Instances, where N is the number of images
+            in the batch. These instances are in 1:1
+            correspondence with the pred_mask_logits. The ground-truth labels (class, box, mask,
+            ...) associated with each instance are stored in fields.
+        vis_period (int): the period (in steps) to dump visualization.
 
     Returns:
-        A tensor of length M, where M is the total number of boxes aggregated over all
-            N batch images. The memory layout corresponds to the concatenation of boxes
-            from all images. Each element is the feature map index, as an offset from
-            `self.min_level`, for the corresponding box (so value i means the box is at
-            `self.min_level + i`).
+        mask_loss (Tensor): A scalar tensor containing the loss.
     """
-    box_sizes = torch.sqrt(cat([boxes.area() for boxes in box_lists]))
-    # Eqn.(1) in FPN paper
-    level_assignments = torch.floor(
-        canonical_level + torch.log2(box_sizes / canonical_box_size + 1e-8)
+    pred_mask_logits = pred_mask_logits[0]
+    boxes = pred_mask_logits[1]
+    cls_agnostic_mask = pred_mask_logits.size(1) == 1
+    total_num_masks = pred_mask_logits.size(0)
+    mask_side_len = pred_mask_logits.size(2)
+    assert pred_mask_logits.size(2) == pred_mask_logits.size(3), "Mask prediction must be square!"
+
+    gt_classes = []
+    gt_masks = []
+    for instances_per_image in instances:
+        if len(instances_per_image) == 0:
+            continue
+        if not cls_agnostic_mask:
+            gt_classes_per_image = instances_per_image.gt_classes.to(dtype=torch.int64)
+            gt_classes.append(gt_classes_per_image)
+
+        gt_masks_per_image = instances_per_image.gt_masks.crop_and_resize(
+            instances_per_image.proposal_boxes.tensor, mask_side_len
+        ).to(device=pred_mask_logits.device)
+        # A tensor of shape (N, M, M), N=#instances in the image; M=mask_side_len
+        gt_masks.append(gt_masks_per_image)
+
+    if len(gt_masks) == 0:
+        return pred_mask_logits.sum() * 0
+
+    gt_masks = cat(gt_masks, dim=0)
+
+    if cls_agnostic_mask:
+        pred_mask_logits = pred_mask_logits[:, 0]
+    else:
+        indices = torch.arange(total_num_masks)
+        gt_classes = cat(gt_classes, dim=0)
+        pred_mask_logits = pred_mask_logits[indices, gt_classes]
+
+    if gt_masks.dtype == torch.bool:
+        gt_masks_bool = gt_masks
+    else:
+        # Here we allow gt_masks to be float as well (depend on the implementation of rasterize())
+        gt_masks_bool = gt_masks > 0.5
+    gt_masks = gt_masks.to(dtype=torch.float32)
+
+    # Log the training accuracy (using gt classes and 0.5 threshold)
+    mask_incorrect = (pred_mask_logits > 0.0) != gt_masks_bool
+    mask_accuracy = 1 - (mask_incorrect.sum().item() / max(mask_incorrect.numel(), 1.0))
+    num_positive = gt_masks_bool.sum().item()
+    false_positive = (mask_incorrect & ~gt_masks_bool).sum().item() / max(
+        gt_masks_bool.numel() - num_positive, 1.0
     )
-    # clamp level to (min, max), in case the box size is too large or too small
-    # for the available feature maps
-    level_assignments = torch.clamp(level_assignments, min=min_level, max=max_level)
-    return level_assignments.to(torch.int64) - min_level
+    false_negative = (mask_incorrect & gt_masks_bool).sum().item() / max(num_positive, 1.0)
+
+    storage = get_event_storage()
+    storage.put_scalar("mask_rcnn/accuracy", mask_accuracy)
+    storage.put_scalar("mask_rcnn/false_positive", false_positive)
+    storage.put_scalar("mask_rcnn/false_negative", false_negative)
+    if vis_period > 0 and storage.iter % vis_period == 0:
+        pred_masks = pred_mask_logits.sigmoid()
+        vis_masks = torch.cat([pred_masks, gt_masks], axis=2)
+        name = "Left: mask prediction;   Right: mask GT"
+        for idx, vis_mask in enumerate(vis_masks):
+            vis_mask = torch.stack([vis_mask] * 3, axis=0)
+            storage.put_image(name + f" ({idx})", vis_mask)
+    height = boxes[:,4] + 1
+    width = boxes[:,3] + 1
+    max_h,max_w = torch.max(torch.max(height),0)[0], torch.max(torch.max(width),0)[0]
+    max_h,max_w = torch.max(torch.tensor([max_h,3])), torch.max(torch.tensor([max_w,3]))
+    gt_tensor = torch.zeros((pred_mask_logits.shape[0],max_h,max_w),device=pred_mask_logits.device,dtype=torch.float32)
+    for i in range(pred_mask_logits.shape[0]):
+        _,_,_,x,y = boxes[i]
+        gt_tensor[i,:,:y,:x] = gt_masks[i].crop_and_resize_mod([0,0,28,28],(x,y))
+    mask_loss = F.binary_cross_entropy_with_logits(pred_mask_logits, gt_tensor, reduction="mean")
+    return mask_loss
 
 
-def _fmt_box_list(box_tensor, batch_index: int):
-    repeated_index = torch.full_like(
-        box_tensor[:, :1], batch_index, dtype=box_tensor.dtype, device=box_tensor.device
-    )
-    return cat((repeated_index, box_tensor), dim=1)
-
-
-def convert_boxes_to_pooler_format(box_lists: List[Boxes]):
+def mask_rcnn_inference(pred_mask_logits: torch.Tensor, pred_instances: List[Instances]):
     """
-    Convert all boxes in `box_lists` to the low-level format used by ROI pooling ops
-    (see description under Returns).
+    Convert pred_mask_logits to estimated foreground probability masks while also
+    extracting only the masks for the predicted classes in pred_instances. For each
+    predicted box, the mask of the same class is attached to the instance by adding a
+    new "pred_masks" field to pred_instances.
 
     Args:
-        box_lists (list[Boxes] | list[RotatedBoxes]):
-            A list of N Boxes or N RotatedBoxes, where N is the number of images in the batch.
+        pred_mask_logits (Tensor): A tensor of shape (B, C, Hmask, Wmask) or (B, 1, Hmask, Wmask)
+            for class-specific or class-agnostic, where B is the total number of predicted masks
+            in all images, C is the number of foreground classes, and Hmask, Wmask are the height
+            and width of the mask predictions. The values are logits.
+        pred_instances (list[Instances]): A list of N Instances, where N is the number of images
+            in the batch. Each Instances must have field "pred_classes".
 
     Returns:
-        When input is list[Boxes]:
-            A tensor of shape (M, 5), where M is the total number of boxes aggregated over all
-            N batch images.
-            The 5 columns are (batch index, x0, y0, x1, y1), where batch index
-            is the index in [0, N) identifying which batch image the box with corners at
-            (x0, y0, x1, y1) comes from.
-        When input is list[RotatedBoxes]:
-            A tensor of shape (M, 6), where M is the total number of boxes aggregated over all
-            N batch images.
-            The 6 columns are (batch index, x_ctr, y_ctr, width, height, angle_degrees),
-            where batch index is the index in [0, N) identifying which batch image the
-            rotated box (x_ctr, y_ctr, width, height, angle_degrees) comes from.
+        None. pred_instances will contain an extra "pred_masks" field storing a mask of size (Hmask,
+            Wmask) for predicted class. Note that the masks are returned as a soft (non-quantized)
+            masks the resolution predicted by the network; post-processing steps, such as resizing
+            the predicted masks to the original image resolution and/or binarizing them, is left
+            to the caller.
     """
-    pooler_fmt_boxes = cat(
-        [_fmt_box_list(box_list.tensor, i) for i, box_list in enumerate(box_lists)], dim=0
-    )
+    cls_agnostic_mask = pred_mask_logits.size(1) == 1
 
-    return pooler_fmt_boxes
+    if cls_agnostic_mask:
+        mask_probs_pred = pred_mask_logits.sigmoid()
+    else:
+        # Select masks corresponding to the predicted classes
+        num_masks = pred_mask_logits.shape[0]
+        class_pred = cat([i.pred_classes for i in pred_instances])
+        indices = torch.arange(num_masks, device=class_pred.device)
+        mask_probs_pred = pred_mask_logits[indices, class_pred][:, None].sigmoid()
+    # mask_probs_pred.shape: (B, 1, Hmask, Wmask)
+
+    num_boxes_per_image = [len(i) for i in pred_instances]
+    mask_probs_pred = mask_probs_pred.split(num_boxes_per_image, dim=0)
+
+    for prob, instances in zip(mask_probs_pred, pred_instances):
+        instances.pred_masks = prob  # (1, Hmask, Wmask)
 
 
-class ROIPooler(nn.Module):
+class BaseMaskRCNNHead(nn.Module):
     """
-    Region of interest feature map pooler that supports pooling from one or more
-    feature maps.
+    Implement the basic Mask R-CNN losses and inference logic described in :paper:`Mask R-CNN`
     """
 
-    def __init__(
-        self,
-        output_size,
-        scales,
-        sampling_ratio,
-        pooler_type,
-        canonical_box_size=224,
-        canonical_level=4,
-    ):
+    @configurable
+    def __init__(self, *, vis_period=0):
         """
-        Args:
-            output_size (int, tuple[int] or list[int]): output size of the pooled region,
-                e.g., 14 x 14. If tuple or list is given, the length must be 2.
-            scales (list[float]): The scale for each low-level pooling op relative to
-                the input image. For a feature map with stride s relative to the input
-                image, scale is defined as a 1 / s. The stride must be power of 2.
-                When there are multiple scales, they must form a pyramid, i.e. they must be
-                a monotically decreasing geometric sequence with a factor of 1/2.
-            sampling_ratio (int): The `sampling_ratio` parameter for the ROIAlign op.
-            pooler_type (string): Name of the type of pooling operation that should be applied.
-                For instance, "ROIPool" or "ROIAlignV2".
-            canonical_box_size (int): A canonical box size in pixels (sqrt(box area)). The default
-                is heuristically defined as 224 pixels in the FPN paper (based on ImageNet
-                pre-training).
-            canonical_level (int): The feature map level index from which a canonically-sized box
-                should be placed. The default is defined as level 4 (stride=16) in the FPN paper,
-                i.e., a box of size 224x224 will be placed on the feature with stride=16.
-                The box placement for all boxes will be determined from their sizes w.r.t
-                canonical_box_size. For example, a box whose area is 4x that of a canonical box
-                should be used to pool features from feature level ``canonical_level+1``.
+        NOTE: this interface is experimental.
 
-                Note that the actual input feature maps given to this module may not have
-                sufficiently many levels for the input boxes. If the boxes are too large or too
-                small for the input feature maps, the closest level will be used.
+        Args:
+            vis_period (int): visualization period
         """
         super().__init__()
+        self.vis_period = vis_period
 
-        if isinstance(output_size, int):
-            output_size = (output_size, output_size)
-        assert len(output_size) == 2
-        assert isinstance(output_size[0], int) and isinstance(output_size[1], int)
-        self.output_size = output_size
+    @classmethod
+    def from_config(cls, cfg, input_shape):
+        return {"vis_period": cfg.VIS_PERIOD}
 
-        if pooler_type == "ROIAlign":
-            self.level_poolers = nn.ModuleList(
-                ROIAlign(
-                    output_size, spatial_scale=scale, sampling_ratio=sampling_ratio, aligned=False
-                )
-                for scale in scales
-            )
-        elif pooler_type == "ROIAlignV2":
-            self.level_poolers = nn.ModuleList(
-                ROIAlign(
-                    output_size, spatial_scale=scale, sampling_ratio=sampling_ratio, aligned=True
-                )
-                for scale in scales
-            )
-        elif pooler_type == "ROIPool":
-            self.level_poolers = nn.ModuleList(
-                RoIPool(output_size, spatial_scale=scale) for scale in scales
-            )
-        elif pooler_type == "ROIAlignRotated":
-            self.level_poolers = nn.ModuleList(
-                ROIAlignRotated(output_size, spatial_scale=scale, sampling_ratio=sampling_ratio)
-                for scale in scales
-            )
-        else:
-            raise ValueError("Unknown pooler type: {}".format(pooler_type))
-
-        # Map scale (defined as 1 / stride) to its feature map level under the
-        # assumption that stride is a power of 2.
-        min_level = -(math.log2(scales[0]))
-        max_level = -(math.log2(scales[-1]))
-        assert math.isclose(min_level, int(min_level)) and math.isclose(
-            max_level, int(max_level)
-        ), "Featuremap stride is not power of 2!"
-        self.min_level = int(min_level)
-        self.max_level = int(max_level)
-        assert (
-            len(scales) == self.max_level - self.min_level + 1
-        ), "[ROIPooler] Sizes of input featuremaps do not form a pyramid!"
-        assert 0 <= self.min_level and self.min_level <= self.max_level
-        self.canonical_level = canonical_level
-        assert canonical_box_size > 0
-        self.canonical_box_size = canonical_box_size
-
-    def forward(self, x: List[torch.Tensor], box_lists: List[Boxes]):
+    def forward(self, x, instances: List[Instances]):
         """
         Args:
-            x (list[Tensor]): A list of feature maps of NCHW shape, with scales matching those
-                used to construct this module.
-            box_lists (list[Boxes] | list[RotatedBoxes]):
-                A list of N Boxes or N RotatedBoxes, where N is the number of images in the batch.
-                The box coordinates are defined on the original image and
-                will be scaled by the `scales` argument of :class:`ROIPooler`.
+            x: input region feature(s) provided by :class:`ROIHeads`.
+            instances (list[Instances]): contains the boxes & labels corresponding
+                to the input features.
+                Exact format is up to its caller to decide.
+                Typically, this is the foreground instances in training, with
+                "proposal_boxes" field and other gt annotations.
+                In inference, it contains boxes that are already predicted.
 
         Returns:
-            Tensor:
-                A tensor of shape (M, C, output_size, output_size) where M is the total number of
-                boxes aggregated over all N batch images and C is the number of channels in `x`.
+            A dict of losses in training. The predicted "instances" in inference.
         """
-        num_level_assignments = len(self.level_poolers)
+        x = self.layers(x)
+        if self.training:
+            return {"loss_mask": mask_rcnn_loss(x, instances, self.vis_period)}
+        else:
+            mask_rcnn_inference(x, instances)
+            return instances
 
-        assert isinstance(x, list) and isinstance(
-            box_lists, list
-        ), "Arguments to pooler must be lists"
-        assert (
-            len(x) == num_level_assignments
-        ), "unequal value, num_level_assignments={}, but x is list of {} Tensors".format(
-            num_level_assignments, len(x)
-        )
+    def layers(self, x):
+        """
+        Neural network layers that makes predictions from input features.
+        """
+        raise NotImplementedError
 
-        assert len(box_lists) == x[0].size(
-            0
-        ), "unequal value, x[0] batch dim 0 is {}, but box_list has length {}".format(
-            x[0].size(0), len(box_lists)
-        )
-        if len(box_lists) == 0:
-            return torch.zeros(
-                (0, x[0].shape[1]) + self.output_size, device=x[0].device, dtype=x[0].dtype
+
+# To get torchscript support, we make the head a subclass of `nn.Sequential`.
+# Therefore, to add new layers in this head class, please make sure they are
+# added in the order they will be used in forward().
+@ROI_MASK_HEAD_REGISTRY.register()
+class MaskRCNNConvUpsampleHead(BaseMaskRCNNHead, nn.Sequential):
+    """
+    A mask head with several conv layers, plus an upsample layer (with `ConvTranspose2d`).
+    Predictions are made with a final 1x1 conv layer.
+    """
+
+    @configurable
+    def __init__(self, input_shape: ShapeSpec, *, num_classes, conv_dims, conv_norm="", **kwargs):
+        """
+        NOTE: this interface is experimental.
+
+        Args:
+            input_shape (ShapeSpec): shape of the input feature
+            num_classes (int): the number of foreground classes (i.e. background is not
+                included). 1 if using class agnostic prediction.
+            conv_dims (list[int]): a list of N>0 integers representing the output dimensions
+                of N-1 conv layers and the last upsample layer.
+            conv_norm (str or callable): normalization for the conv layers.
+                See :func:`detectron2.layers.get_norm` for supported types.
+        """
+        super().__init__(**kwargs)
+        assert len(conv_dims) >= 1, "conv_dims have to be non-empty!"
+
+        self.conv_norm_relus = []
+
+        cur_channels = input_shape.channels
+        for k, conv_dim in enumerate(conv_dims[:-1]):
+            conv = Conv2d(
+                cur_channels,
+                conv_dim,
+                kernel_size=3,
+                stride=1,
+                padding=1,
+                bias=not conv_norm,
+                norm=get_norm(conv_norm, conv_dim),
+                activation=nn.ReLU(),
             )
+            self.add_module("mask_fcn{}".format(k + 1), conv)
+            self.conv_norm_relus.append(conv)
+            cur_channels = conv_dim
 
-        pooler_fmt_boxes = convert_boxes_to_pooler_format(box_lists)
-
-        if num_level_assignments == 1:
-            return self.level_poolers[0](x[0], pooler_fmt_boxes)
-
-        level_assignments = assign_boxes_to_levels(
-            box_lists, self.min_level, self.max_level, self.canonical_box_size, self.canonical_level
+        self.deconv = ConvTranspose2d(
+            cur_channels, conv_dims[-1], kernel_size=2, stride=2, padding=0
         )
+        self.add_module("deconv_relu", nn.ReLU())
+        cur_channels = conv_dims[-1]
 
-        num_boxes = pooler_fmt_boxes.size(0)
-        num_channels = x[0].shape[1]
-        output_size = self.output_size[0]
+        self.predictor = Conv2d(cur_channels, num_classes, kernel_size=1, stride=1, padding=0)
 
-        dtype, device = x[0].dtype, x[0].device
-        
+        for layer in self.conv_norm_relus + [self.deconv]:
+            weight_init.c2_msra_fill(layer)
+        # use normal distribution initialization for mask prediction layer
+        nn.init.normal_(self.predictor.weight, std=0.001)
+        if self.predictor.bias is not None:
+            nn.init.constant_(self.predictor.bias, 0)
 
-
-        boxes = pooler_fmt_boxes
-        scales = []
-        for i in range(boxes.shape[0]):
-            scales.append(self.level_poolers[level_assignments[i]].spatial_scale)
-        scales = torch.tensor(scales)
-        boxes[:,1:3] = torch.floor(boxes[:,1:3]*scale)
-        boxes[:,3:5] = torch.ceil(boxes[:,3:5]*scale)
-        boxes = boxes.to(device=device,dtype=torch.long)
-
-        boxes[boxes[:,1]< 0,1] = 0
-        boxes[boxes[:,2]< 0,2] = 0
-
-        #boxes[boxes[:,3] >= feats[0].shape[-1],3] = feats[0].shape[-1]-1
-        #boxes[boxes[:,4] >= feats[0].shape[-2],4] = feats[0].shape[-2]-1
-        mask = torch.logical_and((boxes[:,3]-boxes[:,1]) > 1,(boxes[:,4]-boxes[:,2]) > 1)
-        height = boxes[:,4] - boxes[:,2] + 1
-        width = boxes[:,3] - boxes[:,1] + 1
-        max_h,max_w = torch.max(torch.max(height),0)[0], torch.max(torch.max(width),0)[0]
-        max_h,max_w = torch.max(torch.tensor([max_h,3])), torch.max(torch.tensor([max_w,3]))
-        output = torch.zeros(
-            (num_boxes, num_channels, max_h, max_w), dtype=dtype, device=device
+    @classmethod
+    def from_config(cls, cfg, input_shape):
+        ret = super().from_config(cfg, input_shape)
+        conv_dim = cfg.MODEL.ROI_MASK_HEAD.CONV_DIM
+        num_conv = cfg.MODEL.ROI_MASK_HEAD.NUM_CONV
+        ret.update(
+            conv_dims=[conv_dim] * (num_conv + 1),  # +1 for ConvTranspose
+            conv_norm=cfg.MODEL.ROI_MASK_HEAD.NORM,
+            input_shape=input_shape,
         )
-        
-        
-        for i in range(boxes.shape[0]): 
-            ind,x0,y0,x1,y1 = boxes[i]
-            output[i,:,:y1-y0+1,:x1-x0+1] = x[level_assignments[i]][ind][:,y0:y1+1,x0:x1+1]
-        
-        boxes[:,0] = torch.arange(boxes.shape[0]) ## i changes this from 0
-        boxes[:,3:5] -= boxes[:,1:3]
-        boxes[:,1:3] = 0
+        if cfg.MODEL.ROI_MASK_HEAD.CLS_AGNOSTIC_MASK:
+            ret["num_classes"] = 1
+        else:
+            ret["num_classes"] = cfg.MODEL.ROI_HEADS.NUM_CLASSES
+        return ret
+
+    def layers(self, x):
+        for layer in self:
+            x = layer(x)
+        return x
 
 
-    return output, boxes
-
-
+def build_mask_head(cfg, input_shape):
+    """
+    Build a mask head defined by `cfg.MODEL.ROI_MASK_HEAD.NAME`.
+    """
+    name = cfg.MODEL.ROI_MASK_HEAD.NAME
+    return ROI_MASK_HEAD_REGISTRY.get(name)(cfg, input_shape)
