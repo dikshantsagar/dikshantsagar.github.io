@@ -277,6 +277,6 @@ class ROIPooler(nn.Module):
         boxes[:,1:3] = 0
 
 
-    return output, boxes
+        return output, boxes
 
 
