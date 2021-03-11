@@ -256,11 +256,11 @@ class ROIPooler(nn.Module):
 			mask = torch.logical_and((boxes[:,3]-boxes[:,1]) > 1,(boxes[:,4]-boxes[:,2]) > 1)
 			height = boxes[:,4] - boxes[:,2] + 1
 			width = boxes[:,3] - boxes[:,1] + 1
-            if boxes.shape > 0 :
-			    max_h,max_w = torch.max(torch.max(height),0)[0], torch.max(torch.max(width),0)[0]
-			    max_h,max_w = torch.max(torch.tensor([max_h,3])), torch.max(torch.tensor([max_w,3]))
-            else:
-                max_h,max_w = torch.tensor(1,device=device),torch.tensor(1,device=device)
+            		if boxes.shape > 0:
+				max_h,max_w = torch.max(torch.max(height),0)[0], torch.max(torch.max(width),0)[0]
+				max_h,max_w = torch.max(torch.tensor([max_h,3])), torch.max(torch.tensor([max_w,3]))
+            		else:
+				max_h,max_w = torch.tensor(1,device=device),torch.tensor(1,device=device)
 			output = torch.zeros(
 				(num_boxes, num_channels, max_h, max_w), dtype=dtype, device=device
 			)
