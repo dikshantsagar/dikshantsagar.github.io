@@ -23,7 +23,7 @@ author = "Hugo Authors"
 
 Chatterjee R., <b>Sagar D.</b>, Pourhomayoun M., Kaur M., & Amini N. (2023, February). <b>Deep Residual Distilled Convolutional Learning For Detection of Large Vessel Occlusion in Ischemic Stroke Patients</b>. In review under the  IEEE‬‭ International‬‭ Conference‬‭ on‬‭ Artificial‬‭ Intelligence,‬‭ Medicine,‬‭ Health‬‭ and‬‭ Care‬‭ (AIMHC‬‭ 2024),‬‭ Laguna‬ Hills, California, Feb. 2024. [ <b>25%</b> Acceptance Rate ]
 
-<b>Sagar D.</b>, Dwivedi T., Aggarwal P., Gupta R., Bhatnagar S., Mohan A., Kaur P., & Gupta A. (2023). <b>CoSP: An Interpretable AI Model on COVID-19 Severity Prediction using Clinical Data at Hospital Admission</b>. In Review for publication in Elsevier’s International Journal of Cognitive Computing in Engineering. [Impact Factor: <b>8.35</b> ]
+<b>Sagar D.</b>, Dwivedi T., Aggarwal P., Gupta R., Bhatnagar S., Mohan A., Kaur P., & Gupta A. (2023). <b>CoSP: An Interpretable AI Model on COVID-19 Severity Prediction using Clinical Data at Hospital Admission</b>. In Review for publication in Springer’s Health Information Science and Systems Journal. [Impact Factor: <b>6.0</b> ]‬
 
 Motwani S., <b>Sagar D.</b>, Aggarwal P., Gupta R., Abrol V., & Gupta A. (2023). <b>MuSARCyto: Multi-Head Self-Attention-based Representation Learning for Unsupervised Clustering of Cytometry Data</b>. In Review for publication in Elsevier’s Journal of Biomedical Informatics. [ Impact Factor: <b>8.0</b> ]
 
