@@ -12,7 +12,7 @@ author = "Hugo Authors"
 
 <b>Sagar, D.</b>, Mohammadi F., Pourhomayoun M., Joen J., & Amini N. (2023 October). <b>Deep Learning Based GABA Edited-MRS Signal Reconstruction</b>. To appear in the proceedings of the 18th International Symposium on Visual Computing (ISVC 2023), Lake Tahoe, NV, Oct. 2023. [ <b>30%</b> Acceptance Rate ] <a href="/isvc"><i class="fa-solid fa-file-pdf" style="color: #464646;"></i></a>
 
-<b>Sagar, D.</b>, Risheh A., Sheikh N. & Forouzesh N. (2023, September). <b>Physics-Guided Deep Generative Model for New Ligand Discovery</b>. To appear in the proceedings of the 14th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB 2023), Houston, TX, Sept. 2023. [ <b>Best paper finalist award</b> | <b>29%</b> Acceptance Rate ] <a href="/acmbcb"><i class="fa-solid fa-file-pdf" style="color: #464646;"></i></a>
+<b>Sagar, D.</b>, Risheh A., Sheikh N. & Forouzesh N. (2023, September). <b>Physics-Guided Deep Generative Model for New Ligand Discovery</b>. To appear in the proceedings of the 14th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB 2023), Houston, TX, Sept. 2023. [ <b>Best paper finalist award</b> | <a href="https://dl.acm.org/doi/10.1145/3584371.3613067">https://dl.acm.org/doi/10.1145/3584371.3613067</a> | <b>29%</b> Acceptance Rate ] <a href="/acmbcb"><i class="fa-solid fa-file-pdf" style="color: #464646;"></i></a>
 
 <b>Sagar, D.</b>, Aggarwal, P., Farswan, A., Gupta, R., & Gupta, A. (2022). <b>GCRS: A hybrid graph convolutional network for risk stratification in multiple myeloma cancer patients. Computers in Biology and Medicine</b>, 149, 106048.<br>[ <a target="_blank" rel="noopener noreferrer" href="https://pubmed.ncbi.nlm.nih.gov/36113255/">https://pubmed.ncbi.nlm.nih.gov/36113255/</a> | Impact Factor: <b>7.7</b>] <a href="/cibm"><i class="fa-solid fa-file-pdf" style="color: #464646;"></i></a>
 
@@ -21,7 +21,7 @@ author = "Hugo Authors"
 
 ## Under Reveiw
 
-Chatterjee R., <b>Sagar D.</b>, Pourhomayoun M., Kaur M., & Amini N. (2023, December). <b>Deep Residual Distilled Convolutional Learning For Detection of Large Vessel Occlusion in Ischemic Stroke Patients</b>. In review under the 23rd IEEE International Conference on Bioinformatics and Bioengineering (BIBE 2023), Virtual Conference, Dec. 2023. [ <b>25%</b> Acceptance Rate ]
+Chatterjee R., <b>Sagar D.</b>, Pourhomayoun M., Kaur M., & Amini N. (2023, February). <b>Deep Residual Distilled Convolutional Learning For Detection of Large Vessel Occlusion in Ischemic Stroke Patients</b>. In review under the  IEEE‬‭ International‬‭ Conference‬‭ on‬‭ Artificial‬‭ Intelligence,‬‭ Medicine,‬‭ Health‬‭ and‬‭ Care‬‭ (AIMHC‬‭ 2024),‬‭ Laguna‬ Hills, California, Feb. 2024. [ <b>25%</b> Acceptance Rate ]
 
 <b>Sagar D.</b>, Dwivedi T., Aggarwal P., Gupta R., Bhatnagar S., Mohan A., Kaur P., & Gupta A. (2023). <b>CoSP: An Interpretable AI Model on COVID-19 Severity Prediction using Clinical Data at Hospital Admission</b>. In Review for publication in Elsevier’s International Journal of Cognitive Computing in Engineering. [Impact Factor: <b>8.35</b> ]
 
