@@ -10,9 +10,9 @@ author = "Hugo Authors"
 
 1. 14th ACM Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB 2023) <br><b>Best Paper Finalist Award</b>.
 2. Cal State LA Non-Resident Tuition Fee Waiver Scholarship 2023.
-3. CSUPERB Faculty-Student Research Collaboration Grant 2023.
+3. CSUBIOTECH Faculty-Student Research Collaboration Grant 2023.
 4. Cal State LA Graduate Scholarship 2023.
-5. CSUPERB Student Research Travel Grant 2023.
+5. CSUBIOTECH Student Research Travel Grant 2023.
 6. Cal State LA - Computer Science Department - <b>Dean’s List 2022</b>.
 
 
