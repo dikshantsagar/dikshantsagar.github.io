@@ -10,7 +10,7 @@ author = "Hugo Authors"
 
 ## Published/Accepted
 
-<b>Sagar, D.</b>, Mohammadi F., Pourhomayoun M., Joen J., & Amini N. (2023 October). <b>Deep Learning Based GABA Edited-MRS Signal Reconstruction</b>. To appear in the proceedings of the 18th International Symposium on Visual Computing (ISVC 2023), Lake Tahoe, NV, Oct. 2023. [<a href="">https://link.springer.com/chapter/10.1007/978-3-031-47969-4_2</a> | <b>30%</b> Acceptance Rate ] <a href="/isvc"><i class="fa-solid fa-file-pdf" style="color: #464646;"></i></a>
+<b>Sagar, D.</b>, Mohammadi F., Pourhomayoun M., Joen J., & Amini N. (2023 October). <b>Deep Learning Based GABA Edited-MRS Signal Reconstruction</b>. To appear in the proceedings of the 18th International Symposium on Visual Computing (ISVC 2023), Lake Tahoe, NV, Oct. 2023. [<a href="https://link.springer.com/chapter/10.1007/978-3-031-47969-4_2">https://link.springer.com/chapter/10.1007/978-3-031-47969-4_2</a> | <b>30%</b> Acceptance Rate ] <a href="/isvc"><i class="fa-solid fa-file-pdf" style="color: #464646;"></i></a>
 
 <b>Sagar, D.</b>, Risheh A., Sheikh N. & Forouzesh N. (2023, September). <b>Physics-Guided Deep Generative Model for New Ligand Discovery</b>. To appear in the proceedings of the 14th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB 2023), Houston, TX, Sept. 2023. [ ⭐️ <b>Best paper finalist award</b> ⭐️ | <a href="https://dl.acm.org/doi/10.1145/3584371.3613067">https://dl.acm.org/doi/10.1145/3584371.3613067</a> | <b>29%</b> Acceptance Rate ] <a href="/acmbcb"><i class="fa-solid fa-file-pdf" style="color: #464646;"></i></a>
 
