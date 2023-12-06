@@ -10,6 +10,8 @@ author = "Hugo Authors"
 
 ## Published/Accepted
 
+Chatterjee R., <b>Sagar D.</b>, Pourhomayoun M., Kaur M., & Amini N. (2023, February). <b>Deep Residual Distilled Convolutional Learning For Detection of Large Vessel Occlusion in Ischemic Stroke Patients</b>. In 1st IEEE‬‭ International‬‭ Conference‬‭ on‬‭ Artificial‬‭ Intelligence,‬‭ Medicine,‬‭ Health‬‭ and‬‭ Care‬‭ (AIMHC‬‭ 2024),‬‭ Laguna‬ Hills, California, Feb. 2024. [ <b>28.33%</b> Acceptance Rate ]
+
 <b>Sagar, D.</b>, Mohammadi F., Pourhomayoun M., Joen J., & Amini N. (2023 October). <b>Deep Learning Based GABA Edited-MRS Signal Reconstruction</b>. In 18th International Symposium on Visual Computing (ISVC 2023), Lake Tahoe, NV, Oct. 2023. [<a href="https://link.springer.com/chapter/10.1007/978-3-031-47969-4_2">https://link.springer.com/chapter/10.1007/978-3-031-47969-4_2</a> | <b>30%</b> Acceptance Rate ] <a href="/isvc"><i class="fa-solid fa-file-pdf" style="color: #464646;"></i></a>
 
 <b>Sagar, D.</b>, Risheh A., Sheikh N. & Forouzesh N. (2023, September). <b>Physics-Guided Deep Generative Model for New Ligand Discovery</b>. In 14th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB 2023), Houston, TX, Sept. 2023. [ ⭐️ <b>Best paper finalist award</b> ⭐️ | <a href="https://dl.acm.org/doi/10.1145/3584371.3613067">https://dl.acm.org/doi/10.1145/3584371.3613067</a> | <b>29%</b> Acceptance Rate ] <a href="/acmbcb"><i class="fa-solid fa-file-pdf" style="color: #464646;"></i></a>
@@ -20,8 +22,6 @@ author = "Hugo Authors"
 
 
 ## Under Reveiw
-
-Chatterjee R., <b>Sagar D.</b>, Pourhomayoun M., Kaur M., & Amini N. (2023, February). <b>Deep Residual Distilled Convolutional Learning For Detection of Large Vessel Occlusion in Ischemic Stroke Patients</b>. In review under the  IEEE‬‭ International‬‭ Conference‬‭ on‬‭ Artificial‬‭ Intelligence,‬‭ Medicine,‬‭ Health‬‭ and‬‭ Care‬‭ (AIMHC‬‭ 2024),‬‭ Laguna‬ Hills, California, Feb. 2024. [ <b>25%</b> Acceptance Rate ]
 
 <b>Sagar D.</b>, Dwivedi T., Aggarwal P., Gupta R., Bhatnagar S., Mohan A., Kaur P., & Gupta A. (2023). <b>CoSP: An Interpretable AI Model on COVID-19 Severity Prediction using Clinical Data at Hospital Admission</b>. In Review for publication in Springer’s Health Information Science and Systems Journal. [Impact Factor: <b>6.0</b> ]‬
 
