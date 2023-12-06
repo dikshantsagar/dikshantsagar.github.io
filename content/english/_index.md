@@ -27,9 +27,11 @@ Remember that you can also specify a section header for the posts below by confi
 
 # About
 
-Hello, I am Dikshant Sagar, a final year computer science masters student in <b>College of Engineering, Computer Science & Technology</b> at <b>California State University, Los Angeles</b>. My research interests revolve around <b>Deep Learning</b> and <b>Machine Learning</b> Applications in <b>Healthcare</b> and <b>Computational Drug Discovery</b>. I am currently working as a graduate researcher at the <b>Machine Learning and Sensing Lab</b>, Cal State LA under Dr. Navid Amini and at the <b>Computational Molecular Biology (COMB) Lab</b>, Cal State LA under Dr. Negin Forouzesh.
+Hello, I am Dikshant Sagar, a final year computer science master's student in <b>College of Engineering, Computer Science & Technology</b> at <b>California State University, Los Angeles</b>. My research interests revolve around <b>Deep Learning</b> and <b>Machine Learning</b> Applications in <b>Healthcare</b> and <b>Computational Drug Discovery</b>. I am currently working as a graduate researcher at the <b>Machine Learning and Sensing Lab</b>, Cal State LA under Dr. Navid Amini and at the <b>Computational Molecular Biology (COMB) Lab</b>, Cal State LA under Dr. Negin Forouzesh.
 <br><br>
 ## Recent News
+
+- Paper titled "<b>Deep Residual Distilled Convolutional Learning For Detection of Large Vessel Occlusion in Ischemic Stroke Patients</b>" got accepted at the 1st IEEE‬‭ International‬‭ Conference‬‭ on‬‭ Artificial‬‭ Intelligence,‬‭ Medicine,‬‭ Health‬‭ and‬‭ Care‬‭ (AIMHC‬‭ 2024),‬‭ Laguna‬ Hills, California. (February 2024)
 
 - Paper titled "<b>Deep Learning Based GABA Edited-MRS Signal Reconstruction</b>" got accepted at the 18th International Symposium on Visual Computing (ISVC 2023), Lake Tahoe, NV. (September 2023)
 
