@@ -20,6 +20,11 @@ author = "Hugo Authors"
 
 ## Certifications
 
-1. <b>Machine Learning and Reinforcement Learning in Finance Specialization Certificate</b> from NYU.
-2. <b>TensorFlow Developer Professional Certificate</b> from DeepLearning.AI
-3. <b>Machine Learning Certification</b> from Coding Ninjas.
+1. <b>Tensorflow on Google Cloud</b> from Google Cloud.
+2. <b>Google Cloud Big Data and Machine Learning Fundamentals</b> from Google Cloud.
+3. <b>Feature Engineering</b> from Google Cloud.
+4. <b>Machine Learning in the Enterprise</b> from Google Cloud.
+5. <b>Production Machine Learning Systems</b> from Google Cloud.
+6. <b>Machine Learning and Reinforcement Learning in Finance Specialization Certificate</b> from NYU.
+7. <b>TensorFlow Developer Professional Certificate</b> from DeepLearning.AI
+8. <b>Machine Learning Certification</b> from Coding Ninjas.
