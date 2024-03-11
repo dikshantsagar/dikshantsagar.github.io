@@ -31,6 +31,10 @@ Hello, I am Dikshant Sagar, a final year computer science master's student in <b
 <br><br>
 ## Recent News
 
+- Will be receiving the <b>Outstanding Graduate Student Award 2024</b> at California State University, Los Angeles.
+  
+- Received the <b>Outstanding Oral Presentation Award</b> at the California State University, Los Angeles Annual Student Symposium on Research, Scholarship, and Creative Activities (RSCA 2024).
+  
 - Paper titled "<b>Deep Residual Distilled Convolutional Learning For Detection of Large Vessel Occlusion in Ischemic Stroke Patients</b>" got accepted at the 1st IEEE‬‭ International‬‭ Conference‬‭ on‬‭ Artificial‬‭ Intelligence,‬‭ Medicine,‬‭ Health‬‭ and‬‭ Care‬‭ (AIMHC‬‭ 2024),‬‭ Laguna‬ Hills, California. (February 2024)
 
 - Paper titled "<b>Deep Learning Based GABA Edited-MRS Signal Reconstruction</b>" got accepted at the 18th International Symposium on Visual Computing (ISVC 2023), Lake Tahoe, NV. (September 2023)
