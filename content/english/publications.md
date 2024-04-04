@@ -10,6 +10,8 @@ author = "Hugo Authors"
 
 ## Published/Accepted
 
+<b>Sagar, D.</b>, Dwivedi, T., Gupta, A., Aggarwal, P., Bhatnagar, S., Mohan, A., Kaur, P. & Bhatnagar Sr, S. (2024). <b>Clinical Features Predicting COVID-19 Severity Risk at the Time of Hospitalization</b>. Cureus, 16(3). [ <a href="https://www.cureus.com/articles/192351#!/">https://www.cureus.com/articles/192351#!/</a> | Impact Factor: <b>1.2</b>]
+
 Chatterjee R., <b>Sagar D.</b>, Pourhomayoun M., Kaur M., & Amini N. (2023, February). <b>Deep Residual Distilled Convolutional Learning For Detection of Large Vessel Occlusion in Ischemic Stroke Patients</b>. In 1st IEEE‬‭ International‬‭ Conference‬‭ on‬‭ Artificial‬‭ Intelligence,‬‭ Medicine,‬‭ Health‬‭ and‬‭ Care‬‭ (AIMHC‬‭ 2024),‬‭ Laguna‬ Hills, California, Feb. 2024. [ <b>28.33%</b> Acceptance Rate ]
 
 <b>Sagar, D.</b>, Mohammadi F., Pourhomayoun M., Joen J., & Amini N. (2023 October). <b>Deep Learning Based GABA Edited-MRS Signal Reconstruction</b>. In 18th International Symposium on Visual Computing (ISVC 2023), Lake Tahoe, NV, Oct. 2023. [<a href="https://link.springer.com/chapter/10.1007/978-3-031-47969-4_2">https://link.springer.com/chapter/10.1007/978-3-031-47969-4_2</a> | <b>30%</b> Acceptance Rate ] <a href="/isvc"><i class="fa-solid fa-file-pdf" style="color: #464646;"></i></a>
@@ -22,8 +24,6 @@ Chatterjee R., <b>Sagar D.</b>, Pourhomayoun M., Kaur M., & Amini N. (2023, Febr
 
 
 ## Under Reveiw
-
-<b>Sagar D.</b>, Dwivedi T., Aggarwal P., Gupta R., Bhatnagar S., Mohan A., Kaur P., & Gupta A. (2023). <b>CoSP: An Interpretable AI Model on COVID-19 Severity Prediction using Clinical Data at Hospital Admission</b>. In Review for publication in Springer’s Health Information Science and Systems Journal. [Impact Factor: <b>6.0</b> ]‬
 
 Motwani S., <b>Sagar D.</b>, Aggarwal P., Gupta R., Abrol V., & Gupta A. (2023). <b>MuSARCyto: Multi-Head Self-Attention-based Representation Learning for Unsupervised Clustering of Cytometry Data</b>. In Review for publication in Elsevier’s Journal of Biomedical Informatics. [ Impact Factor: <b>8.0</b> ]
 
