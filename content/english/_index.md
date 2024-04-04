@@ -31,6 +31,8 @@ Hello, I am Dikshant Sagar, a final year computer science master's student in <b
 <br><br>
 ## Recent News
 
+- Paper titled "<b>Clinical Features Predicting COVID-19 Severity Risk at the Time of Hospitalization</b>" got published in the Cureus Journal of Medical Science. (March 2024)
+
 - Will be receiving the <b>Outstanding Graduate Student Award 2024</b> at California State University, Los Angeles.
   
 - Received the <b>Outstanding Oral Presentation Award</b> at the California State University, Los Angeles Annual Student Symposium on Research, Scholarship, and Creative Activities (RSCA 2024).
