@@ -23,10 +23,6 @@ Chatterjee R., <b>Sagar D.</b>, Pourhomayoun M., Kaur M., & Amini N. (2023, Febr
 <b>Sagar, D.</b>, Garg, J., Kansal, P., Bhalla, S., Shah, R. R., & Yu, Y. (2020, September). <b>PAI-BPR: Personalized outfit recommendation scheme with attribute-wise interpretability</b>. In 2020 IEEE Sixth International Conference on Multimedia Big Data (BigMM 2020) (pp. 221-230). IEEE Virtual Conference. [ <a target="_blank" rel="noopener noreferrer" href="https://ieeexplore.ieee.org/abstract/document/9232589">https://ieeexplore.ieee.org/abstract/document/9232589 </a> | <b>19.5%</b> Acceptance Rate] <a href="/bigmm"><i class="fa-solid fa-file-pdf" style="color: #464646;"></i></a>
 
 
-## Under Reveiw
-
-Motwani S., <b>Sagar D.</b>, Aggarwal P., Gupta R., Abrol V., & Gupta A. (2023). <b>MuSARCyto: Multi-Head Self-Attention-based Representation Learning for Unsupervised Clustering of Cytometry Data</b>. In Review for publication in Elsevier’s Journal of Biomedical Informatics. [ Impact Factor: <b>8.0</b> ]
-
 ## Theses
 
 Deep Reconstruction Model for Exposing Low Concentration Metabolites in Edited-MRS Brain Scans. [ Ongoing ]
