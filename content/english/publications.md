@@ -10,7 +10,7 @@ author = "Hugo Authors"
 
 ## Published/Accepted
 
-<b>Sagar, D.</b>, Dwivedi, T., Gupta, A., Aggarwal, P., Bhatnagar, S., Mohan, A., Kaur, P. & Bhatnagar Sr, S. (2024). <b>Clinical Features Predicting COVID-19 Severity Risk at the Time of Hospitalization</b>. Cureus, 16(3). [ <a href="https://www.cureus.com/articles/192351#!/">https://www.cureus.com/articles/192351#!/</a> | Impact Factor: <b>1.2</b>]
+<b>Sagar, D.</b>, Dwivedi, T., Gupta, A., Aggarwal, P., Bhatnagar, S., Mohan, A., Kaur, P. & Bhatnagar Sr, S. (2024). <b>Clinical Features Predicting COVID-19 Severity Risk at the Time of Hospitalization</b>. Cureus, 16(3). [ <a href="https://pubmed.ncbi.nlm.nih.gov/38690475/">https://pubmed.ncbi.nlm.nih.gov/38690475/</a> | Impact Factor: <b>1.2</b>]
 
 Chatterjee R., <b>Sagar D.</b>, Pourhomayoun M., Kaur M., & Amini N. (2023, February). <b>Deep Residual Distilled Convolutional Learning For Detection of Large Vessel Occlusion in Ischemic Stroke Patients</b>. In 1st IEEE‬‭ International‬‭ Conference‬‭ on‬‭ Artificial‬‭ Intelligence,‬‭ Medicine,‬‭ Health‬‭ and‬‭ Care‬‭ (AIMHC‬‭ 2024),‬‭ Laguna‬ Hills, California, Feb. 2024. [<a href="https://ieeexplore.ieee.org/abstract/document/10504351">https://ieeexplore.ieee.org/abstract/document/10504351</a> | <b>28.33%</b> Acceptance Rate ]
 
