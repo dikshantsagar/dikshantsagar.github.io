@@ -27,13 +27,15 @@ Remember that you can also specify a section header for the posts below by confi
 
 # About
 
-Hello, I am Dikshant Sagar, a final year computer science master's student in <b>College of Engineering, Computer Science & Technology</b> at <b>California State University, Los Angeles</b>. My research interests revolve around <b>Deep Learning</b> and <b>Machine Learning</b> Applications in <b>Healthcare</b> and <b>Computational Drug Discovery</b>. I am currently working as a graduate researcher at the <b>Machine Learning and Sensing Lab</b>, Cal State LA under Dr. Navid Amini and at the <b>Computational Molecular Biology (COMB) Lab</b>, Cal State LA under Dr. Negin Forouzesh.
+Hello, I am Dikshant Sagar, a first-year Computer Science PhD student at the Donald Bren School of Information and Computer Sciences at the <b>University of California, Irvine</b> advised by <b>Dr. Pierre Baldi</b>. I earned my master's degree in Computer Science from <b>California State University, Los Angeles</b> and my bachelor's degree in Computer Science from <b>IIIT Delhi</b> in India. My research interests revolve around <b>Machine Learning</b>, <b>Deep Learning</b> and <b>Artificial Intelligence</b>, particularly their applications in <b>Healthcare</b> and <b>Biomedicine</b>. I have worked as a research assistant at the <b>Machine Learning and Sensing Lab</b>, Cal State LA under Dr. Navid Amini, at the <b>Computational Molecular Biology(COMB) Lab</b>, Cal State LA under Dr. Negin Forouzesh and at the <b>Signal and Biomedical Image Processing(SBI) Lab, IIIT Delhi under Dr. Anubha Gupta.
 <br><br>
 ## Recent News
 
-- Paper titled "<b>Clinical Features Predicting COVID-19 Severity Risk at the Time of Hospitalization</b>" got published in the Cureus Journal of Medical Science. (March 2024)
+- Extended paper titled "<b>Detection of Large Vessel Occlusion in Ischemic Stroke Patients using Deep Residual Distilled Convolutional Networks</b>" got accepted to the International Journal of Semantic Computing. (June 2024)
+  
+- Paper titled "<b>Clinical Features Predicting COVID-19 Severity Risk at the Time of Hospitalization</b>" was published in the Cureus Journal of Medical Science. (March 2024)
 
-- Will be receiving the <b>Outstanding Graduate Student Award 2024</b> at California State University, Los Angeles.
+- Received the <b>Outstanding Graduate Student Award 2024</b> at California State University, Los Angeles.
   
 - Received the <b>Outstanding Oral Presentation Award</b> at the California State University, Los Angeles Annual Student Symposium on Research, Scholarship, and Creative Activities (RSCA 2024).
   
