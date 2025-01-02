@@ -16,7 +16,7 @@ author = "Hugo Authors"
 - CSUBIOTECH Faculty-Student Research Collaboration Grant 2023.
 - Cal State LA Graduate Scholarship 2023.
 - CSUBIOTECH Student Research Travel Grant 2023.
-- Cal State LA - Computer Science Department - <b>Dean’s List 2022</b>.
+- Cal State LA - Computer Science Department - <b>Dean’s List 2022 & 2023</b>.
 
 
 ## Certifications
