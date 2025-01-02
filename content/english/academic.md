@@ -6,11 +6,12 @@ author = "Hugo Authors"
 
 <br>
 
-## Teaching Assistant
+## Teaching
 
-1. COMPSCI 171 - Introduction to Artificial Intelligence 
-
+<!-- - Teaching Assistant: COMPSCI 171 - Introduction to Artificial Intelligence (UCI 2025)-->
+- Teaching Assistant: CS 4550 - Computer Graphics (CSULA 2023) 
+- Teaching Assistant: CS 4540 - Data Visualization (CSULA 2022)
 
 ## Reviewer
 
-1. Neural Network Journal
+ - Neural Networks Journal (2024)
