@@ -4,13 +4,17 @@
   weight = 100
   url = "/"
 
-
   [[main]]
   name = "Publications"
   weight = 200
   identifier = "publications"
   url = "/publications/"
 
+  [[main]]
+  name = "Academic Service"
+  weight = 300
+  identifier = "academic"
+  url = "/academic/"
 
   [[main]]
   name = "Accomplishments"
