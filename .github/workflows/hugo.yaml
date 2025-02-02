@@ -65,6 +65,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./public  # Ensure this matches Hugo output directory
+          name: github-pages
 
   # Deployment job
   deploy:
