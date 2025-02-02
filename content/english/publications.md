@@ -9,7 +9,7 @@ author = "Hugo Authors"
 <br>
 
 ## Published/Accepted
-<b>Sagar D.</b>, (2024, November).<b>Enhancing Drug Discovery via Physics-Guided Deep Generative Models</b>. Computational Structural Bioinformatics Workshop 2024, Boston, MA.
+<b>Sagar D.</b>, Jasko, A., Fourouzesh, N. (2024, November).<b>Enhancing Drug Discovery via Physics-Guided Deep Generative Models</b>. Computational Structural Bioinformatics Workshop 2024, Boston, MA.
 
 Chatterjee R., <b>Sagar D.</b>, Pourhomayoun M., Kaur M., & Amini N. (2024, June). <b>Detection of Large Vessel Occlusion in Ischemic Stroke Patients using Deep Residual Distilled Convolutional Networks</b>. International Journal of Semantic Computing. 
 
