@@ -58,7 +58,7 @@ jobs:
           HUGO_ENV: production
         run: hugo --gc --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
 
-      - name: Debug: List generated files
+      - name: Debug List generated files
         run: ls -R ./public
 
       - name: Upload artifact
@@ -74,7 +74,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Debug: List available artifacts
+      - name: Debug List available artifacts
         run: ls -R ${{ github.workspace }}
 
       - name: Deploy to GitHub Pages
