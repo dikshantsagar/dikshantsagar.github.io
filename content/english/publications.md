@@ -9,6 +9,8 @@ author = "Hugo Authors"
 <br>
 
 ## Published/Accepted
+<b>Sagar D.</b>, (2024, November).<b>Enhancing Drug Discovery via Physics-Guided Deep Generative Models</b>. Computational Structural Bioinformatics Workshop 2024, Boston, MA.
+
 Chatterjee R., <b>Sagar D.</b>, Pourhomayoun M., Kaur M., & Amini N. (2024, June). <b>Detection of Large Vessel Occlusion in Ischemic Stroke Patients using Deep Residual Distilled Convolutional Networks</b>. International Journal of Semantic Computing. 
 
 <b>Sagar, D.</b>, Dwivedi, T., Gupta, A., Aggarwal, P., Bhatnagar, S., Mohan, A., Kaur, P. & Bhatnagar Sr, S. (2024). <b>Clinical Features Predicting COVID-19 Severity Risk at the Time of Hospitalization</b>. Cureus, 16(3). [ <a href="https://pubmed.ncbi.nlm.nih.gov/38690475/">https://pubmed.ncbi.nlm.nih.gov/38690475/</a> | Impact Factor: <b>1.2</b>]
