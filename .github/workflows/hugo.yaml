@@ -73,6 +73,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+      - name: Check Artifacts
+        run: ls -R ${{ github.workspace }} || echo "No artifacts found!"
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
