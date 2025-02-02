@@ -60,8 +60,7 @@ jobs:
 
       - name: Debug: List generated files
         run: |
-          echo "Checking if Hugo output exists..."
-          ls -R ./public || echo "Error: public/ directory not found!"
+          ls -R ./public
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -78,7 +77,6 @@ jobs:
     steps:
       - name: Debug: List available artifacts
         run: |
-          echo "Checking available artifacts..."
           ls -R ${{ github.workspace }}
 
       - name: Deploy to GitHub Pages
