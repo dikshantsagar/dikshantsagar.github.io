@@ -31,6 +31,8 @@ Hello, I am Dikshant Sagar, a first-year Computer Science PhD student at the Don
 <br><br>
 ## Recent News
 
+- Paper titled "<b>Enhancing Drug Discovery via Physics-Guided Deep Generative Models</b>" has been accepted at the Computational Structural Bioinformatics Workshop 2024, Boston, MA. (November, 2024)
+  
 - Extended paper titled "<b>Detection of Large Vessel Occlusion in Ischemic Stroke Patients using Deep Residual Distilled Convolutional Networks</b>" got accepted to the International Journal of Semantic Computing. (June 2024)
   
 - Paper titled "<b>Clinical Features Predicting COVID-19 Severity Risk at the Time of Hospitalization</b>" was published in the Cureus Journal of Medical Science. (March 2024)
