@@ -59,8 +59,7 @@ jobs:
         run: hugo --gc --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
 
       - name: Debug: List generated files
-        run: |
-          ls -R ./public
+        run: ls -R ./public
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -76,8 +75,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Debug: List available artifacts
-        run: |
-          ls -R ${{ github.workspace }}
+        run: ls -R ${{ github.workspace }}
 
       - name: Deploy to GitHub Pages
         id: deployment
