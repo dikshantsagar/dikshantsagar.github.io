@@ -28,6 +28,6 @@ Chatterjee R., <b>Sagar D.</b>, Pourhomayoun M., Kaur M., & Amini N. (2023, Febr
 
 ## Theses
 
-Deep Reconstruction Model for Exposing Low Concentration Metabolites in Edited-MRS Brain Scans. [ Ongoing ]
+Deep Reconstruction Model for Exposing Low Concentration Metabolites in Edited-MRS Brain Scans. 
 
 Multiple Myeloma Cancer Cell Instance Segmentation. A tool to detect and segment MM cancer cells from bone marrow aspirate slides using Deep Learning. [ Published as B.Tech Thesis in IIIT Delhi Thesis Archive 2021. | <a target="_blank" rel="noopener noreferrer" href="https://arxiv.org/abs/2110.04275">https://arxiv.org/abs/2110.04275</a> ]
