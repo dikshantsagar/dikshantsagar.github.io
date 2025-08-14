@@ -31,6 +31,8 @@ Hello, I am Dikshant Sagar, a first-year Computer Science PhD student at the Don
 <br><br>
 ## Recent News
 
+- Paper titled "<b>MuSARCyto: Multi-Head Self-Attention-Based Representation Learning for Unsupervised Clustering of Cytometry Data</b>" has been accepted in the Cytometry A Journal. (August 2024)
+
 - Paper titled "<b>Enhancing Drug Discovery via Physics-Guided Deep Generative Models</b>" has been accepted at the Computational Structural Bioinformatics Workshop 2024, Boston, MA. (November, 2024)
   
 - Extended paper titled "<b>Detection of Large Vessel Occlusion in Ischemic Stroke Patients using Deep Residual Distilled Convolutional Networks</b>" got accepted to the International Journal of Semantic Computing. (June 2024)
