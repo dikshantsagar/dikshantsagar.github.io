@@ -9,6 +9,9 @@ author = "Hugo Authors"
 <br>
 
 ## Published/Accepted
+Gupta A., Hooda R., Motwani S., <b>Sagar D.</b>, Aggarwal P., Abrol V., Gupta R. (2025, August). <b>	
+MuSARCyto: Multi-Head Self-Attention-Based Representation Learning for Unsupervised Clustering of Cytometry Data</b>. Cytometry A. 2025. [ <a href="https://pubmed.ncbi.nlm.nih.gov/40785593/">https://pubmed.ncbi.nlm.nih.gov/40785593/</a> | Impact Factor: <b>2.1</b>]
+
 <b>Sagar D.</b>, Jasko, A., Fourouzesh, N. (2024, November). <b>Enhancing Drug Discovery via Physics-Guided Deep Generative Models</b>. Computational Structural Bioinformatics Workshop 2024, Boston, MA.
 
 Chatterjee R., <b>Sagar D.</b>, Pourhomayoun M., Kaur M., & Amini N. (2024, June). <b>Detection of Large Vessel Occlusion in Ischemic Stroke Patients using Deep Residual Distilled Convolutional Networks</b>. International Journal of Semantic Computing. 
