@@ -15,4 +15,5 @@ author = "Hugo Authors"
 
 ## Reviewer
 
+ - NeurIPS 2025: Machine Learning and the Physical Sciences Workshop.
  - Neural Networks Journal (2024)
