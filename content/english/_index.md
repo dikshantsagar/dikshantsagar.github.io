@@ -31,6 +31,8 @@ Hello, I am Dikshant Sagar, a second-year Computer Science PhD student at the Do
 <br><br>
 ## Recent News
 
+- Paper titled "<b>Physics-Guided Active Learning for New Ligand Discovery</b>" has been accepted at the 18th Computational Structural Bioinformatics Workshop (CSBW 2025) at the 16th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB 2025), Philadelphia, PA (October 2025)
+
 - Paper titled "<b>MuSARCyto: Multi-Head Self-Attention-Based Representation Learning for Unsupervised Clustering of Cytometry Data</b>" has been accepted in the Cytometry A Journal. (August 2024)
 
 - Paper titled "<b>Enhancing Drug Discovery via Physics-Guided Deep Generative Models</b>" has been accepted at the Computational Structural Bioinformatics Workshop 2024, Boston, MA. (November, 2024)
