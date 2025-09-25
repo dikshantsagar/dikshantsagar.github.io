@@ -2,7 +2,7 @@
 title = "Dikshant Sagar"
 author = "Dikshant Sagar"
 #copyright = "2023-2024"
-description = "AI in Healthcare and Biomedicine"
+description = "AI in Healthcare, Biomedicine and Physics"
 profilePicture = "images/profile.jpg"
 keywords = ""
 favicon = "favicons/"
@@ -74,7 +74,7 @@ url = "https://scholar.google.com/citations?user=6FOyM3IAAAAJ&hl=en"
 [[socialIcons]]
 icon = "fas fa-envelope"
 title = "e-mail"
-url = "mailto:dsagar2@calstatela.edu"
+url = "mailto:dikshans@uci.edu"
 
 [mermaid]
 # enable = true
