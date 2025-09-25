@@ -31,7 +31,13 @@ Hello, I am Dikshant Sagar, a second-year Computer Science PhD student at the Do
 <br><br>
 ## Recent News
 
-- Paper titled "<b>Physics-Guided Active Learning for New Ligand Discovery</b>" has been accepted at the 18th Computational Structural Bioinformatics Workshop (CSBW 2025) at the 16th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB 2025), Philadelphia, PA (October 2025)
+- Paper titled "<b>Angular Sparsity Invariant Tilt Series Generation in Scanning/Transmission Electron Microscopy</b>" has been accepted in the Machine Learning for the Physical Sciences Workshop (ML4PS 2025) at the 39th Annual Conference on Neural Information Processing Systems (NeurIPS 2025), San Diego, CA (December 2025)
+  
+- Paper titled "<b>Heterogeneous Point Set Transformers for Segmentation of Multiple View Particle Detectors</b>" has been accepted in the Machine Learning for the Physical Sciences Workshop (ML4PS 2025) at the 39th Annual Conference on Neural Information Processing Systems (NeurIPS 2025), San Diego, CA (December 2025)
+  
+- Paper titled "<b>Scalable Inference for LArTPC Signal Processing with MobileU-Net and Overlap–Tile Chunking</b>" has been accepted in the Machine Learning for the Physical Sciences Workshop (ML4PS 2025) at the 39th Annual Conference on Neural Information Processing Systems (NeurIPS 2025), San Diego, CA (December 2025)
+
+- Paper titled "<b>Physics-Guided Active Learning for New Ligand Discovery</b>" has been accepted in the 18th Computational Structural Bioinformatics Workshop (CSBW 2025) at the 16th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB 2025), Philadelphia, PA (October 2025)
 
 - Paper titled "<b>MuSARCyto: Multi-Head Self-Attention-Based Representation Learning for Unsupervised Clustering of Cytometry Data</b>" has been accepted in the Cytometry A Journal. (August 2024)
 
