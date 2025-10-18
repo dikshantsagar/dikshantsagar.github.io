@@ -10,11 +10,11 @@ author = "Hugo Authors"
 
 ## Published/Accepted
 
-Robles E., Sagar D., Yankelevich A., Bian J., Baldi P. (2025, December). <b>Heterogeneous Point Set Transformers for Segmentation of Multiple View Particle Detectors</b>. Accepted to NeurIPS 2025 Workshop - Machine Learning for the Physical Sciences, San Diego, CA, Dec. 2025.
+Robles E., <b>Sagar D.</b>, Yankelevich A., Bian J., Baldi P. (2025, December). <b>Heterogeneous Point Set Transformers for Segmentation of Multiple View Particle Detectors</b>. Accepted to NeurIPS 2025 Workshop - Machine Learning for the Physical Sciences, San Diego, CA, Dec. 2025.
 
-Sagar D., Li Z., Abdelkarim S., Patterson J.P., Baldi P. (2025, December). <b>Angular Sparsity Invariant Tilt Series Generation in Scanning/Transmission Electron Microscopy</b>. Accepted to NeurIPS 2025 Workshop - Machine Learning for the Physical Sciences, San Diego, CA, Dec. 2025.
+<b>Sagar D.</b>, Li Z., Abdelkarim S., Patterson J.P., Baldi P. (2025, December). <b>Angular Sparsity Invariant Tilt Series Generation in Scanning/Transmission Electron Microscopy</b>. Accepted to NeurIPS 2025 Workshop - Machine Learning for the Physical Sciences, San Diego, CA, Dec. 2025.
 
-Sagar D., et al. (2025, December). <b>Scalable Inference for LArTPC Signal Processing with MobileU-Net and Overlap–Tile Chunking</b>. Accepted to NeurIPS 2025 Workshop - Machine Learning for the Physical Sciences, San Diego, CA, Dec. 2025.
+<b>Sagar D.</b>, et al. (2025, December). <b>Scalable Inference for LArTPC Signal Processing with MobileU-Net and Overlap–Tile Chunking</b>. Accepted to NeurIPS 2025 Workshop - Machine Learning for the Physical Sciences, San Diego, CA, Dec. 2025.
 
 Dhiman N., <b>Sagar D.</b>, Forouzesh N. (2025, October). <b>Physics-Guided Active Learning for New Ligand Discovery</b>. In the 16th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB 2025), Philadelphia, PA, Oct. 2025.
 
