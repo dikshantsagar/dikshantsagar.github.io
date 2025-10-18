@@ -9,7 +9,14 @@ author = "Hugo Authors"
 <br>
 
 ## Published/Accepted
-Dhiman N., <b>Sagar D.</b>, Forouzesh N. (2025, October). <b>Physics-Guided Active Learning for New Ligand Discovery</b>. In 16th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB 2025), Philadelphia, PA, Oct. 2025.
+
+Robles E., Sagar D., Yankelevich A., Bian J., Baldi P. (2025, December). <b>Heterogeneous Point Set Transformers for Segmentation of Multiple View Particle Detectors</b>. Accepted to NeurIPS 2025 Workshop - Machine Learning for the Physical Sciences, San Diego, CA, Dec. 2025.
+
+Sagar D., Li Z., Abdelkarim S., Patterson J.P., Baldi P. (2025, December). <b>Angular Sparsity Invariant Tilt Series Generation in Scanning/Transmission Electron Microscopy</b>. Accepted to NeurIPS 2025 Workshop - Machine Learning for the Physical Sciences, San Diego, CA, Dec. 2025.
+
+Sagar D., et al. (2025, December). <b>Scalable Inference for LArTPC Signal Processing with MobileU-Net and Overlap–Tile Chunking</b>. Accepted to NeurIPS 2025 Workshop - Machine Learning for the Physical Sciences, San Diego, CA, Dec. 2025.
+
+Dhiman N., <b>Sagar D.</b>, Forouzesh N. (2025, October). <b>Physics-Guided Active Learning for New Ligand Discovery</b>. In the 16th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB 2025), Philadelphia, PA, Oct. 2025.
 
 Gupta A., Hooda R., Motwani S., <b>Sagar D.</b>, Aggarwal P., Abrol V., Gupta R. (2025, August). <b>	
 MuSARCyto: Multi-Head Self-Attention-Based Representation Learning for Unsupervised Clustering of Cytometry Data</b>. Cytometry A. 2025. [ <a href="https://pubmed.ncbi.nlm.nih.gov/40785593/">https://pubmed.ncbi.nlm.nih.gov/40785593/</a> | Impact Factor: <b>2.1</b>]
@@ -24,11 +31,11 @@ Chatterjee R., <b>Sagar D.</b>, Pourhomayoun M., Kaur M., & Amini N. (2023, Febr
 
 <b>Sagar, D.</b>, Mohammadi F., Pourhomayoun M., Joen J., & Amini N. (2023 October). <b>Deep Learning Based GABA Edited-MRS Signal Reconstruction</b>. In 18th International Symposium on Visual Computing (ISVC 2023), Lake Tahoe, NV, Oct. 2023. [<a href="https://link.springer.com/chapter/10.1007/978-3-031-47969-4_2">https://link.springer.com/chapter/10.1007/978-3-031-47969-4_2</a> | <b>30%</b> Acceptance Rate ] <a href="/isvc"><i class="fa-solid fa-file-pdf" style="color: #464646;"></i></a>
 
-<b>Sagar, D.</b>, Risheh A., Sheikh N. & Forouzesh N. (2023, September). <b>Physics-Guided Deep Generative Model for New Ligand Discovery</b>. In 14th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB 2023), Houston, TX, Sept. 2023. [ ⭐️ <b>Best paper finalist award</b> ⭐️ | <a href="https://dl.acm.org/doi/10.1145/3584371.3613067">https://dl.acm.org/doi/10.1145/3584371.3613067</a> | <b>29%</b> Acceptance Rate ] <a href="/acmbcb"><i class="fa-solid fa-file-pdf" style="color: #464646;"></i></a>
+<b>Sagar, D.</b>, Risheh A., Sheikh N. & Forouzesh N. (2023, September). <b>Physics-Guided Deep Generative Model for New Ligand Discovery</b>. In the 14th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB 2023), Houston, TX, Sept. 2023. [ ⭐️ <b>Best paper finalist award</b> ⭐️ | <a href="https://dl.acm.org/doi/10.1145/3584371.3613067">https://dl.acm.org/doi/10.1145/3584371.3613067</a> | <b>29%</b> Acceptance Rate ] <a href="/acmbcb"><i class="fa-solid fa-file-pdf" style="color: #464646;"></i></a>
 
 <b>Sagar, D.</b>, Aggarwal, P., Farswan, A., Gupta, R., & Gupta, A. (2022). <b>GCRS: A hybrid graph convolutional network for risk stratification in multiple myeloma cancer patients</b>. Computers in Biology and Medicine, 149, 106048.<br>[ <a target="_blank" rel="noopener noreferrer" href="https://pubmed.ncbi.nlm.nih.gov/36113255/">https://pubmed.ncbi.nlm.nih.gov/36113255/</a> | Impact Factor: <b>7.7</b>] <a href="/cibm"><i class="fa-solid fa-file-pdf" style="color: #464646;"></i></a>
 
-<b>Sagar, D.</b>, Garg, J., Kansal, P., Bhalla, S., Shah, R. R., & Yu, Y. (2020, September). <b>PAI-BPR: Personalized outfit recommendation scheme with attribute-wise interpretability</b>. In 2020 IEEE Sixth International Conference on Multimedia Big Data (BigMM 2020) (pp. 221-230). IEEE Virtual Conference. [ <a target="_blank" rel="noopener noreferrer" href="https://ieeexplore.ieee.org/abstract/document/9232589">https://ieeexplore.ieee.org/abstract/document/9232589 </a> | <b>19.5%</b> Acceptance Rate] <a href="/bigmm"><i class="fa-solid fa-file-pdf" style="color: #464646;"></i></a>
+<b>Sagar, D.</b>, Garg, J., Kansal, P., Bhalla, S., Shah, R. R., & Yu, Y. (2020, September). <b>PAI-BPR: Personalized outfit recommendation scheme with attribute-wise interpretability</b>. In 2020, IEEE Sixth International Conference on Multimedia Big Data (BigMM 2020) (pp. 221-230). IEEE Virtual Conference. [ <a target="_blank" rel="noopener noreferrer" href="https://ieeexplore.ieee.org/abstract/document/9232589">https://ieeexplore.ieee.org/abstract/document/9232589 </a> | <b>19.5%</b> Acceptance Rate] <a href="/bigmm"><i class="fa-solid fa-file-pdf" style="color: #464646;"></i></a>
 
 
 ## Theses
