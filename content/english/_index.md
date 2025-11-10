@@ -31,38 +31,38 @@ Hello, I am Dikshant Sagar, a second-year Computer Science PhD student at the Do
 <br><br>
 ## Recent News
 
-- [December 2025] Paper titled "<b>Physics-Guided Active Learning for New Ligand Discovery</b>" won the <b>best paper award</b> at the 18th Computational Structural Bioinformatics Workshop (CSBW 2025) at the 16th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB 2025), Philadelphia, PA.
+- <b>[December 2025]</b> Paper titled "<b>Physics-Guided Active Learning for New Ligand Discovery</b>" won the <b>best paper award</b> at the 18th Computational Structural Bioinformatics Workshop (CSBW 2025) at the 16th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB 2025), Philadelphia, PA.
 
-- [December 2025] Paper titled "<b>Angular Sparsity Invariant Tilt Series Generation in Scanning/Transmission Electron Microscopy</b>" has been accepted in the Machine Learning for the Physical Sciences Workshop (ML4PS 2025) at the 39th Annual Conference on Neural Information Processing Systems (NeurIPS 2025), San Diego, CA.
+- <b>[December 2025]</b> Paper titled "<b>Angular Sparsity Invariant Tilt Series Generation in Scanning/Transmission Electron Microscopy</b>" has been accepted in the Machine Learning for the Physical Sciences Workshop (ML4PS 2025) at the 39th Annual Conference on Neural Information Processing Systems (NeurIPS 2025), San Diego, CA.
   
-- [December 2025] Paper titled "<b>Heterogeneous Point Set Transformers for Segmentation of Multiple View Particle Detectors</b>" has been accepted in the Machine Learning for the Physical Sciences Workshop (ML4PS 2025) at the 39th Annual Conference on Neural Information Processing Systems (NeurIPS 2025), San Diego, CA.
+- <b>[December 2025]</b> Paper titled "<b>Heterogeneous Point Set Transformers for Segmentation of Multiple View Particle Detectors</b>" has been accepted in the Machine Learning for the Physical Sciences Workshop (ML4PS 2025) at the 39th Annual Conference on Neural Information Processing Systems (NeurIPS 2025), San Diego, CA.
   
-- [December 2025] Paper titled "<b>Scalable Inference for LArTPC Signal Processing with MobileU-Net and Overlap–Tile Chunking</b>" has been accepted in the Machine Learning for the Physical Sciences Workshop (ML4PS 2025) at the 39th Annual Conference on Neural Information Processing Systems (NeurIPS 2025), San Diego, CA.
+- <b>[December 2025]</b> Paper titled "<b>Scalable Inference for LArTPC Signal Processing with MobileU-Net and Overlap–Tile Chunking</b>" has been accepted in the Machine Learning for the Physical Sciences Workshop (ML4PS 2025) at the 39th Annual Conference on Neural Information Processing Systems (NeurIPS 2025), San Diego, CA.
 
-- [October 2025] Paper titled "<b>Physics-Guided Active Learning for New Ligand Discovery</b>" has been accepted in the 18th Computational Structural Bioinformatics Workshop (CSBW 2025) at the 16th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB 2025), Philadelphia, PA.
+- <b>[October 2025]</b> Paper titled "<b>Physics-Guided Active Learning for New Ligand Discovery</b>" has been accepted in the 18th Computational Structural Bioinformatics Workshop (CSBW 2025) at the 16th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB 2025), Philadelphia, PA.
 
-- [August 2025] Paper titled "<b>MuSARCyto: Multi-Head Self-Attention-Based Representation Learning for Unsupervised Clustering of Cytometry Data</b>" has been accepted in the Cytometry A Journal.
+- <b>[August 2025]</b> Paper titled "<b>MuSARCyto: Multi-Head Self-Attention-Based Representation Learning for Unsupervised Clustering of Cytometry Data</b>" has been accepted in the Cytometry A Journal.
 
-- [November, 2024] Paper titled "<b>Enhancing Drug Discovery via Physics-Guided Deep Generative Models</b>" has been accepted at the Computational Structural Bioinformatics Workshop 2024, Boston, MA. 
+- <b>[November, 2024]</b> Paper titled "<b>Enhancing Drug Discovery via Physics-Guided Deep Generative Models</b>" has been accepted at the Computational Structural Bioinformatics Workshop 2024, Boston, MA. 
   
-- [June 2024] Extended paper titled "<b>Detection of Large Vessel Occlusion in Ischemic Stroke Patients using Deep Residual Distilled Convolutional Networks</b>" got accepted to the International Journal of Semantic Computing. 
+- <b>[June 2024]</b> Extended paper titled "<b>Detection of Large Vessel Occlusion in Ischemic Stroke Patients using Deep Residual Distilled Convolutional Networks</b>" got accepted to the International Journal of Semantic Computing. 
   
-- [March 2024] Paper titled "<b>Clinical Features Predicting COVID-19 Severity Risk at the Time of Hospitalization</b>" was published in the Cureus Journal of Medical Science.
+- <b>[March 2024]</b> Paper titled "<b>Clinical Features Predicting COVID-19 Severity Risk at the Time of Hospitalization</b>" was published in the Cureus Journal of Medical Science.
 
-- [2024] Received the <b>Outstanding Graduate Student Award 2024</b> at California State University, Los Angeles.
+- <b>[2024]</b> Received the <b>Outstanding Graduate Student Award 2024</b> at California State University, Los Angeles.
   
-- [2024] Received the <b>Outstanding Oral Presentation Award</b> at the California State University, Los Angeles Annual Student Symposium on Research, Scholarship, and Creative Activities (RSCA 2024).
+- <b>[2024]</b> Received the <b>Outstanding Oral Presentation Award</b> at the California State University, Los Angeles Annual Student Symposium on Research, Scholarship, and Creative Activities (RSCA 2024).
   
-- [February 2024] Paper titled "<b>Deep Residual Distilled Convolutional Learning For Detection of Large Vessel Occlusion in Ischemic Stroke Patients</b>" got accepted at the 1st IEEE‬‭ International‬‭ Conference‬‭ on‬‭ Artificial‬‭ Intelligence,‬‭ Medicine,‬‭ Health‬‭ and‬‭ Care‬‭ (AIMHC‬‭ 2024),‬‭ Laguna‬ Hills, California.
+- <b>[February 2024]</b> Paper titled "<b>Deep Residual Distilled Convolutional Learning For Detection of Large Vessel Occlusion in Ischemic Stroke Patients</b>" got accepted at the 1st IEEE‬‭ International‬‭ Conference‬‭ on‬‭ Artificial‬‭ Intelligence,‬‭ Medicine,‬‭ Health‬‭ and‬‭ Care‬‭ (AIMHC‬‭ 2024),‬‭ Laguna‬ Hills, California.
 
-- [September 2023] Paper titled "<b>Deep Learning Based GABA Edited-MRS Signal Reconstruction</b>" got accepted at the 18th International Symposium on Visual Computing (ISVC 2023), Lake Tahoe, NV. 
+- <b>[September 2023]</b> Paper titled "<b>Deep Learning Based GABA Edited-MRS Signal Reconstruction</b>" got accepted at the 18th International Symposium on Visual Computing (ISVC 2023), Lake Tahoe, NV. 
 
-- [September 2023] Received the <b>Cal State LA Graduate Scholarship 2023</b>. 
+- <b>[September 2023]</b> Received the <b>Cal State LA Graduate Scholarship 2023</b>. 
 
-- [September 2023] Paper titled "Physics-Guided Deep Generative Model for New Ligand Discovery" won the <b>best paper finalist award</b> at the 14th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB 2023), Houston, TX. 
+- <b>[September 2023]</b> Paper titled "Physics-Guided Deep Generative Model for New Ligand Discovery" won the <b>best paper finalist award</b> at the 14th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB 2023), Houston, TX. 
 
-- [August 2023] Paper titled "<b>Physics-Guided Deep Generative Model for New Ligand Discovery</b>" got accepted at the 16th Computational Structural Bioinformatics Workshop (CSBW 2023) at the 14th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB 2023), Houston, TX. 
+- <b>[August 2023]</b> Paper titled "<b>Physics-Guided Deep Generative Model for New Ligand Discovery</b>" got accepted at the 16th Computational Structural Bioinformatics Workshop (CSBW 2023) at the 14th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB 2023), Houston, TX. 
 
-- [July 2023] Received the <b>CSUPERB Faculty-Student Research Collaboration Grant 2023</b>. 
+- <b>[July 2023]</b> Received the <b>CSUPERB Faculty-Student Research Collaboration Grant 2023</b>. 
 
-- [May 2023] Received the <b>CSUPERB Student Research Travel Grant 2023</b>. 
+- <b>[May 2023]</b> Received the <b>CSUPERB Student Research Travel Grant 2023</b>. 
