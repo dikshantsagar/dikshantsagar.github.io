@@ -31,7 +31,7 @@ Hello, I am Dikshant Sagar, a second-year Computer Science PhD student at the Do
 <br><br>
 ## Recent News
 
-- <b>[December 2025]</b> Paper titled "<b>Physics-Guided Active Learning for New Ligand Discovery</b>" won the <b>best paper award</b> at the 18th Computational Structural Bioinformatics Workshop (CSBW 2025) at the 16th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB 2025), Philadelphia, PA.
+- <b>[December 2025]</b> Paper titled "<b>Physics-Guided Active Learning for New Ligand Discovery</b>" won the <b>⭐️ best paper award ⭐️</b> at the 18th Computational Structural Bioinformatics Workshop (CSBW 2025) at the 16th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB 2025), Philadelphia, PA.
 
 - <b>[December 2025]</b> Paper titled "<b>Angular Sparsity Invariant Tilt Series Generation in Scanning/Transmission Electron Microscopy</b>" has been accepted in the Machine Learning for the Physical Sciences Workshop (ML4PS 2025) at the 39th Annual Conference on Neural Information Processing Systems (NeurIPS 2025), San Diego, CA.
   
