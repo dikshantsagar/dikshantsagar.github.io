@@ -16,7 +16,7 @@ Robles E., <b>Sagar D.</b>, Yankelevich A., Bian J., Baldi P. (2025, December). 
 
 <b>Sagar D.</b>, et al. (2025, December). <b>Scalable Inference for LArTPC Signal Processing with MobileU-Net and Overlap–Tile Chunking</b>. Accepted to NeurIPS 2025 Workshop - Machine Learning for the Physical Sciences, San Diego, CA, Dec. 2025.
 
-Dhiman N., <b>Sagar D.</b>, Forouzesh N. (2025, October). <b>Physics-Guided Active Learning for New Ligand Discovery</b>. In the 16th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB 2025), Philadelphia, PA, Oct. 2025.
+Dhiman N., <b>Sagar D.</b>, Forouzesh N. (2025, October). <b>Physics-Guided Active Learning for New Ligand Discovery</b>. In the 16th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB 2025), Philadelphia, PA, Oct. 2025. [⭐️ Best paper award ⭐️]
 
 Gupta A., Hooda R., Motwani S., <b>Sagar D.</b>, Aggarwal P., Abrol V., Gupta R. (2025, August). <b>	
 MuSARCyto: Multi-Head Self-Attention-Based Representation Learning for Unsupervised Clustering of Cytometry Data</b>. Cytometry A. 2025. [ <a href="https://pubmed.ncbi.nlm.nih.gov/40785593/">https://pubmed.ncbi.nlm.nih.gov/40785593/</a> | Impact Factor: <b>2.1</b>]
