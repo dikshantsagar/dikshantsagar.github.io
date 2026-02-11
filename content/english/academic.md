@@ -8,6 +8,7 @@ author = "Hugo Authors"
 
 ## Teaching
 
+- Teaching Assistant: COMPSCI 172B & 274C - Neural Networks and Deep Learning (UCI - Winter 2026)
 - Teaching Assistant: COMPSCI 171 - Introduction to Artificial Intelligence (UCI - Winter 2025, Spring 2025)
 - Instructor: Summer Course - Machine Learning (CSULA 2023 & 2024)
 - Teaching Assistant: CS 4550 - Computer Graphics (CSULA 2023) 
