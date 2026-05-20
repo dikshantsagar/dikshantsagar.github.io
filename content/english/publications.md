@@ -10,6 +10,8 @@ author = "Hugo Authors"
 
 ## Published/Accepted
 
+<b>Sagar D.</b>, Yu K., Yankelevich A., Bian J., Baldi P. (March 2026). <b>Adapting Vision-Language Models for Neutrino Event Classification in High-Energy Physics</b>. Nature Communications Physics 2026. [ <a href="https://arxiv.org/abs/2509.08461">Preprint</a> | Impact Factor: <b>5.8</b> ]
+
 Robles E., <b>Sagar D.</b>, Yankelevich A., Bian J., Baldi P. (2025, December). <b>Heterogeneous Point Set Transformers for Segmentation of Multiple View Particle Detectors</b>. Accepted to NeurIPS 2025 Workshop - Machine Learning for the Physical Sciences, San Diego, CA, Dec. 2025.
 
 <b>Sagar D.</b>, Li Z., Abdelkarim S., Patterson J.P., Baldi P. (2025, December). <b>Angular Sparsity Invariant Tilt Series Generation in Scanning/Transmission Electron Microscopy</b>. Accepted to NeurIPS 2025 Workshop - Machine Learning for the Physical Sciences, San Diego, CA, Dec. 2025.
