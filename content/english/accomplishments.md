@@ -8,6 +8,8 @@ author = "Hugo Authors"
 
 ## Scholarships, Student Grants, Honors and Awards
 
+- UCI AGS Travel Grant (2026).
+- UCI AGS Travel Grant (2025)
 - <b>Computer Science Department Research Fellowship 2024</b> at University of California, Irvine.
 - <b>Outstanding Graduate Student Award 2024</b> at California State University, Los Angeles.
 - <b>Outstanding Oral Presentation Award</b> at the California State University, Los Angeles Annual Student Symposium on Research, Scholarship, and Creative Activities (RSCA 2024).
