@@ -109,7 +109,7 @@ export const PERSONAL_INFO = {
   location: "Irvine, California",
   email: "dikshans@uci.edu",
   phone: "+1 (213) 643-9590",
-  status: "3rd-Year CS Ph.D. Candidate (GPA 4.0)",
+  status: "3rd-Year CS Ph.D. Candidate",
   availability: "Seeking ML / AI Research & Industry Internships",
   bioShort: "AI Researcher with 8+ years developing deep learning and foundation models for scientific discovery. Primary focus on Multimodal Biomedical AI (cellular phenotyping, de novo drug discovery, digital pathology) and physics-guided generative models (neutrino event classification at Fermilab/CERN).",
   bioLong: "I am a third-year Computer Science Ph.D. student at UC Irvine advised by Dr. Pierre Baldi. My research focuses on developing frontier artificial intelligence systems for scientific discovery, with primary emphasis on multimodal biomedical AI (cellular phenotyping, de novo drug discovery, digital pathology, neurospectroscopy) and physics-guided generative models (high-energy particle physics at Fermilab and CERN). I have authored 15+ peer-reviewed publications across venues including Nature Communications Physics, Cytometry A, Computers in Biology & Medicine, and NeurIPS workshops. Prior to UCI, I earned my M.S. in Computer Science (GPA 4.0) at Cal State LA and B.Tech in Computer Science at IIIT Delhi.",
