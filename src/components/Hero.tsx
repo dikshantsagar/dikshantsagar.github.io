@@ -63,7 +63,7 @@ export const Hero: React.FC = () => {
           </div>
 
           {/* Massive Display Typography */}
-          <h1 className="text-3xl sm:text-5xl lg:text-7xl xl:text-8xl font-extrabold tracking-tighter leading-[1.05] sm:leading-[0.95] text-transparent bg-clip-text bg-gradient-to-b from-slate-900 via-slate-800 to-slate-700 dark:from-white dark:via-white/95 dark:to-white/60 mb-2 sm:mb-4 text-center sm:text-left">
+          <h1 className="text-3xl sm:text-5xl lg:text-7xl xl:text-8xl font-extrabold tracking-tighter leading-[1.15] sm:leading-[1.08] text-transparent bg-clip-text bg-gradient-to-b from-slate-900 via-slate-800 to-slate-700 dark:from-white dark:via-white/95 dark:to-white/60 pb-1.5 sm:pb-3 mb-1 sm:mb-2 text-center sm:text-left">
             Dikshant Sagar
           </h1>
 
@@ -84,7 +84,7 @@ export const Hero: React.FC = () => {
           </div>
 
           <p className="text-xs sm:text-base text-[var(--text-secondary)] leading-relaxed max-w-xl mb-6 sm:mb-8 text-center sm:text-left">
-            Third-year CS Ph.D. candidate (GPA 4.0) advised by <span className="text-[var(--text-primary)] font-semibold">Dr. Pierre Baldi</span>. Engineering multimodal biomedical foundation models, physics-conditioned diffusion, and vision-language architectures for frontier scientific discovery.
+            Third-year CS Ph.D. candidate advised by <span className="text-[var(--text-primary)] font-semibold">Dr. Pierre Baldi</span>. Engineering multimodal biomedical foundation models, physics-conditioned diffusion, and vision-language architectures for frontier scientific discovery.
           </p>
 
           {/* Double-Bezel Metric Bento Grid: Symmetrical Dividers */}
@@ -227,7 +227,7 @@ export const Hero: React.FC = () => {
                     <MapPin className="w-3 h-3 text-slate-400" strokeWidth={1.5} />
                     <span>Irvine, CA</span>
                   </div>
-                  <span className="text-emerald-400 font-medium">Verified Active</span>
+                  <span className="text-emerald-400 font-medium">Seeking Internships</span>
                 </div>
               </div>
             </div>
