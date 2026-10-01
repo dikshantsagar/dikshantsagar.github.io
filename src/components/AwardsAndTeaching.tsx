@@ -1,54 +1,51 @@
 import React from 'react';
 import { AWARDS, TEACHING_LIST, REVIEWER_SERVICES, EDUCATION_LIST } from '../data/portfolioData';
-import {
-  Award,
-  BookOpen,
-  GraduationCap,
-  ShieldCheck,
-  ExternalLink
-} from 'lucide-react';
+import { Award, ExternalLink, BookOpen } from 'lucide-react';
 
 export const AwardsAndTeaching: React.FC = () => {
   return (
-    <section id="awards" className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      {/* Education First */}
-      <div className="mb-20">
-        <div className="mb-10 text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-600 dark:text-cyan-300 text-xs font-mono mb-3">
-            <GraduationCap className="w-3.5 h-3.5" />
-            <span>Academic Background</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--text-primary)] mb-4">
-            Education
-          </h2>
+    <section id="education" className="py-14 sm:py-20 lg:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      {/* Macro-Whitespace & Eyebrow Heading */}
+      <div className="text-left mb-10 sm:mb-14">
+        <div className="eyebrow-badge bg-blue-500/10 border border-blue-500/25 text-blue-600 dark:text-blue-400 mb-3 sm:mb-4">
+          <span>06 / Academic Rigor</span>
         </div>
+        <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[var(--text-primary)] mb-3 sm:mb-4">
+          Education & Distinctions
+        </h2>
+        <p className="text-sm sm:text-base lg:text-lg text-[var(--text-secondary)] max-w-2xl leading-relaxed">
+          Ph.D. and Master's curriculum maintained with a perfect 4.0 GPA, complemented by competitive research fellowships, best paper honors, and teaching appointments.
+        </p>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {EDUCATION_LIST.map((edu, idx) => (
-            <div
-              key={idx}
-              className="card-surface p-6 sm:p-7 rounded-2xl transition-all duration-200 flex flex-col justify-between shadow-lg"
-            >
+      {/* Education Double-Bezel Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 mb-8 sm:mb-12 text-left">
+        {EDUCATION_LIST.map((edu, idx) => (
+          <div
+            key={idx}
+            className="double-bezel group flex flex-col justify-between"
+          >
+            <div className="bezel-core p-5 sm:p-8 h-full flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between gap-2 mb-3">
-                  <span className="font-mono text-xs text-cyan-600 dark:text-cyan-400 font-medium">
+                  <span className="font-mono text-xs text-blue-600 dark:text-blue-400 font-semibold px-2.5 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20">
                     {edu.period}
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-600 dark:text-emerald-300 text-[11px] font-mono font-medium">
-                    GPA: {edu.gpa}
+                  <span className="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 border border-emerald-500/25 font-bold">
+                    GPA {edu.gpa}
                   </span>
                 </div>
 
-                <h3 className="font-bold text-base text-[var(--text-primary)] mb-1.5">
+                <h3 className="font-bold text-base sm:text-lg text-[var(--text-primary)] mb-1 leading-snug">
                   {edu.degree}
                 </h3>
-                <div className="text-xs text-[var(--text-secondary)] font-medium mb-3">
-                  {edu.institution} • {edu.location}
+                <div className="text-xs text-blue-600 dark:text-blue-400 font-medium mb-3">
+                  {edu.institution}
                 </div>
 
                 {edu.advisor && (
-                  <div className="text-xs text-[var(--text-muted)] font-mono mb-2">
-                    Advisor: <span className="text-cyan-600 dark:text-cyan-300 font-medium">{edu.advisor}</span>
+                  <div className="text-xs text-[var(--text-muted)] font-mono mb-3">
+                    Advisor: <span className="text-[var(--text-primary)] font-semibold">{edu.advisor}</span>
                   </div>
                 )}
 
@@ -58,113 +55,122 @@ export const AwardsAndTeaching: React.FC = () => {
               </div>
 
               {edu.thesis && (
-                <div className="pt-3 border-t border-[var(--border-subtle)] mt-2">
-                  <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase block mb-1">
+                <div className="pt-3 border-t border-[var(--border-subtle)] text-xs">
+                  <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-[0.2em] font-semibold block mb-1">
                     Thesis
                   </span>
-                  <div className="text-xs text-[var(--text-primary)] font-medium leading-snug mb-2">
+                  <p className="font-medium text-[var(--text-primary)] leading-snug line-clamp-2 mb-2">
                     {edu.thesis}
-                  </div>
+                  </p>
                   {edu.thesisUrl && (
                     <a
                       href={edu.thesisUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300 font-medium"
+                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-600 dark:text-blue-400 hover:underline transition-colors"
                     >
                       <span>Read Thesis</span>
-                      <ExternalLink className="w-3 h-3" />
+                      <ExternalLink className="w-2.5 h-2.5" strokeWidth={1.5} />
                     </a>
                   )}
                 </div>
               )}
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
 
-      {/* Two Column Grid: Awards & Teaching */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 text-left">
+      {/* Two Column Grid: Honors & Teaching/Service */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 text-left">
         {/* Honors and Fellowships */}
-        <div>
-          <div className="flex items-center gap-2 text-cyan-600 dark:text-cyan-400 font-mono text-xs uppercase tracking-wider mb-6">
-            <Award className="w-4 h-4" />
-            <span>Honors, Awards & Fellowships</span>
-          </div>
+        <div className="double-bezel">
+          <div className="bezel-core p-5 sm:p-8 h-full">
+            <div className="flex items-center gap-2.5 text-xs font-mono uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400 font-bold mb-5 sm:mb-6">
+              <Award className="w-4 h-4" strokeWidth={1.5} />
+              <span>Honors & Fellowships</span>
+            </div>
 
-          <div className="space-y-3.5">
-            {AWARDS.map((award, idx) => (
-              <div
-                key={idx}
-                className={`p-5 rounded-2xl border transition-all ${
-                  award.highlight
-                    ? 'bg-amber-500/10 dark:bg-[#14120a] border-amber-500/40 shadow-lg shadow-amber-950/10'
-                    : 'card-surface hover:border-slate-300 dark:hover:border-white/20'
-                }`}
-              >
-                <div className="flex items-start justify-between gap-3 mb-1.5">
-                  <h4 className="text-sm font-semibold text-[var(--text-primary)] leading-snug">
-                    {award.title}
-                  </h4>
-                  <span className="font-mono text-xs text-[var(--text-muted)] shrink-0">
-                    {award.year}
-                  </span>
+            <div className="space-y-3 sm:space-y-3.5">
+              {AWARDS.map((award, idx) => (
+                <div
+                  key={idx}
+                  className={`p-3.5 sm:p-4 rounded-2xl border transition-all duration-300 ${
+                    award.highlight
+                      ? 'bg-blue-500/[0.08] border-blue-500/25 shadow-sm'
+                      : 'bg-[var(--bg-surface-elevated)] border-[var(--border-subtle)]'
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-2 mb-1">
+                    <h4 className="font-bold text-xs sm:text-sm text-[var(--text-primary)]">
+                      {award.title}
+                    </h4>
+                    <span className="font-mono text-xs text-[var(--text-muted)] shrink-0">
+                      {award.year}
+                    </span>
+                  </div>
+                  <div className="text-xs text-blue-600 dark:text-blue-400 font-medium mb-1">
+                    {award.issuer}
+                  </div>
+                  {award.description && (
+                    <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+                      {award.description}
+                    </p>
+                  )}
                 </div>
-                <div className="text-xs text-cyan-600 dark:text-cyan-400 font-mono mb-2">
-                  {award.issuer}
-                </div>
-                {award.description && (
-                  <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                    {award.description}
-                  </p>
-                )}
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
 
         {/* Teaching & Peer Review Service */}
-        <div>
-          <div className="flex items-center gap-2 text-cyan-600 dark:text-cyan-400 font-mono text-xs uppercase tracking-wider mb-6">
-            <BookOpen className="w-4 h-4" />
-            <span>Teaching & Mentorship</span>
-          </div>
-
-          <div className="space-y-3.5 mb-10">
-            {TEACHING_LIST.map((teach, idx) => (
-              <div
-                key={idx}
-                className="card-surface p-5 rounded-2xl transition-all hover:border-cyan-500/30"
-              >
-                <div className="flex items-start justify-between gap-3 mb-1.5">
-                  <h4 className="text-sm font-semibold text-[var(--text-primary)] leading-snug">
-                    {teach.course}
-                  </h4>
-                  <span className="font-mono text-xs text-[var(--text-muted)] shrink-0">
-                    {teach.terms}
-                  </span>
-                </div>
-                <div className="text-xs text-cyan-600 dark:text-cyan-400 font-mono">
-                  {teach.role} • {teach.institution}
-                </div>
+        <div className="double-bezel">
+          <div className="bezel-core p-5 sm:p-8 h-full flex flex-col justify-between">
+            <div>
+              <div className="flex items-center gap-2.5 text-xs font-mono uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400 font-bold mb-5 sm:mb-6">
+                <BookOpen className="w-4 h-4" strokeWidth={1.5} />
+                <span>Pedagogical Appointments</span>
               </div>
-            ))}
-          </div>
 
-          {/* Peer Reviewing Service */}
-          <div>
-            <div className="flex items-center gap-2 text-cyan-600 dark:text-cyan-400 font-mono text-xs uppercase tracking-wider mb-4">
-              <ShieldCheck className="w-4 h-4" />
-              <span>Academic Peer Review Service</span>
+              <div className="space-y-3 mb-8">
+                {TEACHING_LIST.map((teach, idx) => (
+                  <div
+                    key={idx}
+                    className="p-4 rounded-2xl bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)] text-xs"
+                  >
+                    <div className="flex items-start justify-between gap-2 mb-1">
+                      <h4 className="font-bold text-xs sm:text-sm text-[var(--text-primary)]">
+                        {teach.role}
+                      </h4>
+                      <span className="font-mono text-xs text-[var(--text-muted)] shrink-0">
+                        {teach.terms}
+                      </span>
+                    </div>
+                    <div className="text-xs text-[var(--text-secondary)] font-medium mb-0.5">
+                      {teach.course}
+                    </div>
+                    <div className="text-[11px] text-[var(--text-muted)]">
+                      {teach.institution}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div className="card-surface p-5 rounded-2xl divide-y divide-[var(--border-subtle)]">
-              {REVIEWER_SERVICES.map((rev, idx) => (
-                <div key={idx} className="py-2.5 first:pt-0 last:pb-0 flex items-center justify-between text-xs">
-                  <span className="text-[var(--text-primary)] font-medium">{rev.venue}</span>
-                  <span className="font-mono text-[var(--text-muted)]">{rev.year}</span>
-                </div>
-              ))}
+            {/* Peer Reviewer Box */}
+            <div className="pt-6 border-t border-[var(--border-subtle)]">
+              <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--text-muted)] mb-3 font-semibold">
+                Peer Reviewer for Journals & Conferences
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {REVIEWER_SERVICES.map((rev, idx) => (
+                  <span
+                    key={idx}
+                    className="font-mono text-[11px] px-2.5 py-1 rounded-full bg-[var(--chip-bg)] border border-[var(--chip-border)] text-[var(--chip-text)]"
+                  >
+                    {rev.venue} ({rev.year})
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>

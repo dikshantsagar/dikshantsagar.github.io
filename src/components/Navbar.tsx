@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 import { useTheme } from '../context/ThemeContext';
-import { Download, Menu, X, ArrowUpRight, FileText, Sun, Moon } from 'lucide-react';
+import { FileText, Sun, Moon, ArrowUpRight } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -10,7 +10,7 @@ export const Navbar: React.FC = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['hero', 'research-focus', 'publications', 'experience', 'projects', 'skills', 'awards', 'contact'];
+      const sections = ['hero', 'research-focus', 'publications', 'experience', 'projects', 'skills', 'education', 'contact'];
       const scrollPosition = window.scrollY + 200;
 
       for (const sectionId of sections) {
@@ -36,151 +36,148 @@ export const Navbar: React.FC = () => {
     { label: 'Experience', href: '#experience', id: 'experience' },
     { label: 'Projects', href: '#projects', id: 'projects' },
     { label: 'Skills', href: '#skills', id: 'skills' },
-    { label: 'Honors', href: '#awards', id: 'awards' },
+    { label: 'Education', href: '#education', id: 'education' },
     { label: 'Contact', href: '#contact', id: 'contact' }
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-3 sm:px-6 lg:px-8 py-3">
-      <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 px-4 sm:px-6 py-2 rounded-full bg-[var(--nav-bg)] backdrop-blur-xl border border-[var(--nav-border)] shadow-2xl">
-        {/* Brand / Logo */}
-        <a
-          href="#hero"
-          className="group flex flex-col text-left transition-colors shrink-0"
-          aria-label="Dikshant Sagar - Back to top"
-        >
-          <span className="font-semibold text-sm sm:text-base tracking-tight text-[var(--text-primary)] group-hover:text-cyan-500 dark:group-hover:text-cyan-300 transition-colors">
-            {PERSONAL_INFO.name}
-          </span>
-          <span className="font-mono text-[10px] sm:text-[10.5px] text-cyan-600 dark:text-cyan-400 font-medium whitespace-nowrap">
-            Ph.D. Researcher • UC Irvine
-          </span>
-        </a>
-
-        {/* Desktop Navigation Links: visible on laptop/desktop viewports */}
-        <nav className="hidden xl:flex items-center gap-1 bg-[var(--nav-pill-bg)] border border-[var(--border-subtle)] rounded-full p-1 shadow-md mx-2">
-          {navLinks.map((link) => {
-            const isActive = activeSection === link.id;
-            return (
-              <a
-                key={link.id}
-                href={link.href}
-                className={`inline-flex items-center text-xs px-3.5 py-1.5 rounded-full font-medium transition-all duration-200 whitespace-nowrap ${
-                  isActive
-                    ? 'text-cyan-600 dark:text-cyan-300 bg-cyan-500/10 dark:bg-white/10 border border-cyan-500/30 dark:border-cyan-400/40 shadow-inner'
-                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/[0.08] border border-transparent'
-                }`}
-              >
-                {link.label}
-              </a>
-            );
-          })}
-        </nav>
-
-        {/* Right Action: Theme Toggle & Download CV */}
-        <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-          {/* Theme Toggle Button */}
-          <button
-            onClick={toggleTheme}
-            className="p-1.5 sm:p-2 rounded-full border border-[var(--border-subtle)] bg-[var(--card-inner)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all cursor-pointer shadow-sm shrink-0"
-            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-          >
-            {theme === 'dark' ? (
-              <Sun className="w-4 h-4 text-amber-300 hover:rotate-45 transition-transform" />
-            ) : (
-              <Moon className="w-4 h-4 text-slate-700 hover:-rotate-12 transition-transform" />
-            )}
-          </button>
-
-          {/* Download CV */}
+    <>
+      {/* Floating Fluid Island Nav */}
+      <header className="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-5xl">
+        <div className="flex items-center justify-between gap-3 px-3.5 sm:px-5 py-2.5 rounded-full bg-[var(--nav-bg)] backdrop-blur-2xl border border-[var(--nav-border)] shadow-md dark:shadow-[0_16px_40px_-10px_rgba(0,0,0,0.5)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
+          {/* Identity */}
           <a
-            href={PERSONAL_INFO.cvPdfUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            download="CV_Dikshant_Sagar.pdf"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-1.5 rounded-full text-xs font-semibold text-slate-900 bg-cyan-400 hover:bg-cyan-300 transition-all duration-200 shadow-sm shrink-0 whitespace-nowrap"
+            href="#hero"
+            className="flex items-center gap-2 group text-left shrink-0 pl-1"
+            aria-label="Dikshant Sagar - Back to top"
           >
-            <Download className="w-3.5 h-3.5" />
-            <span>Download CV</span>
+            <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-500 group-hover:scale-125 transition-transform duration-300" />
+            <div className="flex flex-col">
+              <span className="font-bold text-xs sm:text-sm tracking-tight text-[var(--text-primary)] leading-tight whitespace-nowrap">
+                {PERSONAL_INFO.name}
+              </span>
+              <span className="hidden md:inline font-mono text-[10px] text-[var(--text-muted)] leading-none">
+                Ph.D. Researcher @ UC Irvine
+              </span>
+            </div>
           </a>
 
-          {/* Mobile menu button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="xl:hidden p-1.5 sm:p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors shrink-0"
-            aria-label="Toggle Navigation Menu"
-          >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
-        </div>
-      </div>
+          {/* Desktop Navigation Links */}
+          <nav className="hidden lg:flex items-center gap-0.5">
+            {navLinks.map((link) => {
+              const isActive = activeSection === link.id;
+              return (
+                <a
+                  key={link.id}
+                  href={link.href}
+                  className={`text-xs px-3.5 py-1.5 rounded-full font-medium transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+                    isActive
+                      ? 'text-[var(--text-primary)] bg-[var(--bezel-outer-bg)] border border-[var(--border-subtle)] font-semibold shadow-xs'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bezel-outer-bg)]'
+                  }`}
+                >
+                  {link.label}
+                </a>
+              );
+            })}
+          </nav>
 
-      {/* Mobile Drawer */}
-      {mobileMenuOpen && (
-        <div className="xl:hidden mt-2 p-5 rounded-2xl bg-[var(--nav-bg)] backdrop-blur-2xl border border-[var(--nav-border)] shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200 max-w-7xl mx-auto">
-          <div className="flex items-center justify-between pb-3 mb-3 border-b border-[var(--border-subtle)]">
-            <span className="font-semibold text-sm text-[var(--text-primary)]">
-              Navigation
-            </span>
-
+          {/* Action Controls */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            {/* Theme Toggle Pill */}
             <button
               onClick={toggleTheme}
-              className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-[var(--border-subtle)] bg-[var(--card-inner)] text-xs font-mono text-[var(--text-secondary)]"
+              className="p-1.5 sm:p-2 rounded-full border border-[var(--border-subtle)] bg-[var(--bezel-outer-bg)] hover:bg-[var(--bg-surface-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all duration-300 cursor-pointer active:scale-95"
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
             >
               {theme === 'dark' ? (
-                <>
-                  <Sun className="w-3.5 h-3.5 text-amber-300" />
-                  <span>Light Mode</span>
-                </>
+                <Sun className="w-3.5 h-3.5 text-amber-300" strokeWidth={1.5} />
               ) : (
-                <>
-                  <Moon className="w-3.5 h-3.5 text-slate-700" />
-                  <span>Dark Mode</span>
-                </>
+                <Moon className="w-3.5 h-3.5 text-slate-700" strokeWidth={1.5} />
               )}
             </button>
-          </div>
 
-          <div className="flex flex-col gap-1.5">
-            {navLinks.map((link) => (
-              <a
-                key={link.id}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                  activeSection === link.id
-                    ? 'text-cyan-600 dark:text-cyan-300 bg-cyan-500/10 dark:bg-white/10 border border-cyan-500/30 dark:border-cyan-400/30 font-semibold'
-                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/5'
-                }`}
-              >
-                {link.label}
-              </a>
-            ))}
-          </div>
-
-          <div className="mt-4 pt-4 border-t border-[var(--border-subtle)] flex flex-col gap-2.5">
+            {/* Nested Button-in-Button Trailing Icon CTA */}
             <a
               href={PERSONAL_INFO.cvPdfUrl}
               target="_blank"
               rel="noopener noreferrer"
-              download="CV_Dikshant_Sagar.pdf"
-              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-cyan-400 text-slate-900 text-sm font-semibold hover:bg-cyan-300 transition-colors shadow-sm"
+              className="group inline-flex items-center gap-1.5 sm:gap-2 pl-3 sm:pl-3.5 pr-1 sm:pr-1.5 py-1 rounded-full text-xs font-semibold bg-[var(--btn-primary-bg)] text-[var(--btn-primary-text)] hover:opacity-90 transition-all duration-300 shadow-sm active:scale-[0.98]"
             >
-              <FileText className="w-4 h-4" />
-              <span>Download CV (PDF)</span>
+              <span>CV<span className="hidden sm:inline"> (PDF)</span></span>
+              <span className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[var(--btn-primary-text)] text-[var(--btn-primary-bg)] flex items-center justify-center transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:scale-105">
+                <ArrowUpRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" strokeWidth={2} />
+              </span>
             </a>
 
-            <a
-              href="mailto:dikshans@uci.edu"
-              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm font-medium transition-colors border border-[var(--border-subtle)]"
+            {/* Hamburger Morph Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden relative w-9 h-9 rounded-full border border-[var(--border-subtle)] bg-[var(--bezel-outer-bg)] text-[var(--text-primary)] flex items-center justify-center transition-colors cursor-pointer"
+              aria-label="Toggle Navigation"
             >
-              <span>Get in Touch</span>
-              <ArrowUpRight className="w-4 h-4" />
-            </a>
+              <div className="w-4 h-3.5 relative flex flex-col justify-between">
+                <span
+                  className={`w-full h-0.5 bg-current rounded-full transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+                    mobileMenuOpen ? 'rotate-45 translate-y-[6px]' : ''
+                  }`}
+                />
+                <span
+                  className={`w-full h-0.5 bg-current rounded-full transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+                    mobileMenuOpen ? 'opacity-0' : ''
+                  }`}
+                />
+                <span
+                  className={`w-full h-0.5 bg-current rounded-full transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+                    mobileMenuOpen ? '-rotate-45 -translate-y-[6px]' : ''
+                  }`}
+                />
+              </div>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Screen-Filling Glass Modal Reveal for Mobile */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden fixed inset-0 z-40 bg-slate-950/90 dark:bg-black/90 backdrop-blur-3xl flex flex-col justify-center px-8 py-20 animate-in fade-in duration-300">
+          <div className="max-w-md mx-auto w-full flex flex-col gap-6">
+            <span className="font-mono text-xs uppercase tracking-[0.25em] text-blue-400 font-semibold mb-2">
+              Navigation
+            </span>
+
+            <nav className="flex flex-col gap-3">
+              {navLinks.map((link, idx) => (
+                <a
+                  key={link.id}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{ animationDelay: `${idx * 40}ms` }}
+                  className="text-2xl font-bold tracking-tight text-white/90 hover:text-white hover:translate-x-2 transition-all duration-300"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+
+            <div className="pt-6 mt-4 border-t border-white/10 flex flex-col gap-4">
+              <a
+                href={PERSONAL_INFO.cvPdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMobileMenuOpen(false)}
+                className="inline-flex items-center justify-between p-4 rounded-2xl bg-white/10 border border-white/15 text-white font-medium text-sm"
+              >
+                <div className="flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-blue-400" strokeWidth={1.5} />
+                  <span>Download Curriculum Vitae</span>
+                </div>
+                <ArrowUpRight className="w-4 h-4" />
+              </a>
+            </div>
           </div>
         </div>
       )}
-    </header>
+    </>
   );
 };

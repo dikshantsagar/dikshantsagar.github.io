@@ -8,48 +8,45 @@ import { Experience } from './components/Experience';
 import { Projects } from './components/Projects';
 import { Skills } from './components/Skills';
 import { AwardsAndTeaching } from './components/AwardsAndTeaching';
-import { CVSection } from './components/CVSection';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
+import { NeuralBackground } from './components/NeuralBackground';
 
 export const App: React.FC = () => {
   return (
     <ThemeProvider>
-      <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] selection:bg-cyan-500/25 selection:text-cyan-700 dark:selection:text-cyan-200 transition-colors duration-200">
-        {/* Fixed Navigation Bar */}
+      <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] transition-colors duration-300 relative">
+        {/* Subtle Dynamic Neural Network Manifold Background */}
+        <NeuralBackground />
+
         <Navbar />
 
-        {/* Main Content Sections */}
         <main>
-          {/* 1. Hero with Interactive Particle / Manifold Background */}
+          {/* 1. Recruiter Executive Hero */}
           <Hero />
 
-          {/* 2. Research Focus (Problem -> Approach -> Impact) */}
+          {/* 2. Core Research Directions */}
           <ResearchFocus />
 
-          {/* 3. Selected Research & Publications */}
+          {/* 3. Selected Publications */}
           <Publications />
 
-          {/* 4. Research Experience & Laboratories */}
+          {/* 4. Experience & Laboratories */}
           <Experience />
 
-          {/* 5. Featured Projects & Architectures */}
+          {/* 5. Featured Architectures & Systems */}
           <Projects />
 
           {/* 6. Technical Stack & Systems */}
           <Skills />
 
-          {/* 7. Education, Honors, Awards & Teaching */}
+          {/* 7. Education & Honors */}
           <AwardsAndTeaching />
 
-          {/* 8. CV Download Access */}
-          <CVSection />
-
-          {/* 9. Contact Section */}
+          {/* 8. Connect & Inquiries */}
           <Contact />
         </main>
 
-        {/* Footer */}
         <Footer />
       </div>
     </ThemeProvider>

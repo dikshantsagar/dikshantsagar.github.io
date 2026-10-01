@@ -1,21 +1,9 @@
 import React, { useState } from 'react';
 import { PERSONAL_INFO } from '../data/portfolioData';
-import {
-  Mail,
-  Copy,
-  Check,
-  Send,
-  MapPin,
-  Phone,
-  GraduationCap,
-  Github,
-  Linkedin,
-  ArrowUpRight
-} from 'lucide-react';
+import { Mail, Copy, Check, MapPin, ExternalLink, GraduationCap, Github, Linkedin, FileText, ArrowUpRight } from 'lucide-react';
 
 export const Contact: React.FC = () => {
   const [copiedEmail, setCopiedEmail] = useState(false);
-  const [copiedPhone, setCopiedPhone] = useState(false);
 
   const copyEmail = () => {
     navigator.clipboard.writeText(PERSONAL_INFO.email);
@@ -23,158 +11,138 @@ export const Contact: React.FC = () => {
     setTimeout(() => setCopiedEmail(false), 2000);
   };
 
-  const copyPhone = () => {
-    navigator.clipboard.writeText(PERSONAL_INFO.phone);
-    setCopiedPhone(true);
-    setTimeout(() => setCopiedPhone(false), 2000);
-  };
-
   return (
-    <section id="contact" className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      <div className="max-w-4xl mx-auto rounded-3xl card-surface p-8 sm:p-14 text-center backdrop-blur-xl shadow-2xl relative overflow-hidden">
-        {/* Subtle accent glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-32 bg-cyan-500/10 blur-3xl pointer-events-none" />
+    <section id="contact" className="py-14 sm:py-20 lg:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      {/* Massive Double-Bezel Contact Island */}
+      <div className="double-bezel p-1.5 sm:p-2 rounded-3xl sm:rounded-[2.5rem] text-left">
+        <div className="bezel-core p-6 sm:p-12 lg:p-14 rounded-[calc(1.5rem-2px)] sm:rounded-[calc(2.5rem-8px)]">
+          <div className="max-w-3xl mb-8 sm:mb-12">
+            <div className="eyebrow-badge bg-emerald-500/10 border border-emerald-500/25 text-emerald-600 dark:text-emerald-400 mb-3 sm:mb-4">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <span>07 / Availability & Contact</span>
+            </div>
 
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-600 dark:text-cyan-300 text-xs font-mono mb-4">
-          <Mail className="w-3.5 h-3.5" />
-          <span>Get in Touch</span>
-        </div>
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[var(--text-primary)] mb-3 sm:mb-4">
+              Initiate Collaboration
+            </h2>
 
-        <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-[var(--text-primary)] mb-4">
-          Interested in working together?
-        </h2>
+            <p className="text-sm sm:text-base lg:text-lg text-[var(--text-secondary)] leading-relaxed">
+              Actively seeking ML/AI Research Scientist and Applied Scientist internships for Summer and Fall. Open to exploring high-impact research collaborations in multimodal biomedical foundation models and physics-informed AI.
+            </p>
+          </div>
 
-        <p className="text-[var(--text-secondary)] text-sm sm:text-base max-w-xl mx-auto mb-10 leading-relaxed">
-          I am currently seeking <span className="text-cyan-600 dark:text-cyan-300 font-medium">ML / AI research and industry internships</span>. I am also always open to exploring research collaborations at the intersection of foundation models, biomedicine, and physics.
-        </p>
-
-        {/* Primary Contact Action Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto mb-10 text-left">
-          {/* Email card */}
-          <div className="p-4 sm:p-5 rounded-2xl card-inner-box hover:border-cyan-400/40 transition-all flex items-center justify-between group">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-600 dark:text-cyan-400">
-                <Mail className="w-4 h-4" />
+          {/* Primary Action Array */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 mb-8 sm:mb-10">
+            {/* Email Card */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)] flex items-center justify-between group">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0">
+                  <Mail className="w-4 h-4 text-blue-600 dark:text-blue-400" strokeWidth={1.5} />
+                </div>
+                <div className="min-w-0">
+                  <span className="font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-wider block font-semibold">
+                    Direct Email
+                  </span>
+                  <a
+                    href={`mailto:${PERSONAL_INFO.email}`}
+                    className="font-mono text-xs text-[var(--text-primary)] hover:text-blue-600 dark:hover:text-blue-400 transition-colors truncate block"
+                  >
+                    {PERSONAL_INFO.email}
+                  </a>
+                </div>
               </div>
-              <div>
-                <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] block font-medium">
-                  Email
+              <button
+                onClick={copyEmail}
+                className="p-2 rounded-xl text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-hover)] transition-colors cursor-pointer shrink-0 ml-2"
+                title="Copy email to clipboard"
+              >
+                {copiedEmail ? (
+                  <Check className="w-4 h-4 text-emerald-500" strokeWidth={2} />
+                ) : (
+                  <Copy className="w-4 h-4" strokeWidth={1.5} />
+                )}
+              </button>
+            </div>
+
+            {/* Location / Institutional Lab */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)] flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-[var(--bezel-outer-bg)] border border-[var(--border-subtle)] flex items-center justify-center shrink-0">
+                <MapPin className="w-4 h-4 text-[var(--text-muted)]" strokeWidth={1.5} />
+              </div>
+              <div className="min-w-0">
+                <span className="font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-wider block font-semibold">
+                  Lab Location
                 </span>
-                <a
-                  href={`mailto:${PERSONAL_INFO.email}`}
-                  className="text-xs font-mono text-[var(--text-primary)] group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors"
-                >
-                  {PERSONAL_INFO.email}
-                </a>
-              </div>
-            </div>
-
-            <button
-              onClick={copyEmail}
-              className="p-2 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
-              title="Copy email"
-            >
-              {copiedEmail ? (
-                <Check className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
-              ) : (
-                <Copy className="w-3.5 h-3.5" />
-              )}
-            </button>
-          </div>
-
-          {/* Phone card */}
-          <div className="p-4 sm:p-5 rounded-2xl card-inner-box hover:border-cyan-400/40 transition-all flex items-center justify-between group">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400">
-                <Phone className="w-4 h-4" />
-              </div>
-              <div>
-                <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] block font-medium">
-                  Phone
+                <span className="text-xs text-[var(--text-primary)] font-medium truncate block">
+                  UC Irvine, Baldi Lab, CA
                 </span>
-                <a
-                  href={`tel:${PERSONAL_INFO.phone}`}
-                  className="text-xs font-mono text-[var(--text-primary)] group-hover:text-emerald-600 dark:group-hover:text-emerald-300 transition-colors"
-                >
-                  {PERSONAL_INFO.phone}
-                </a>
               </div>
             </div>
 
-            <button
-              onClick={copyPhone}
-              className="p-2 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
-              title="Copy phone"
+            {/* Curriculum Vitae Button-in-Button */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)] flex items-center justify-between">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0">
+                  <FileText className="w-4 h-4 text-blue-600 dark:text-blue-400" strokeWidth={1.5} />
+                </div>
+                <div className="min-w-0">
+                  <span className="font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-wider block font-semibold truncate">
+                    Curriculum Vitae
+                  </span>
+                  <span className="text-xs text-[var(--text-primary)] font-medium truncate block">
+                    Verified Academic CV
+                  </span>
+                </div>
+              </div>
+              <a
+                href={PERSONAL_INFO.cvPdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group/btn inline-flex items-center gap-1.5 pl-3 pr-1 py-1 rounded-full bg-[var(--btn-primary-bg)] text-[var(--btn-primary-text)] text-xs font-semibold hover:opacity-90 transition-all duration-300 shrink-0 ml-2"
+              >
+                <span>PDF</span>
+                <span className="w-5 h-5 rounded-full bg-[var(--btn-primary-text)] text-[var(--btn-primary-bg)] flex items-center justify-center transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5">
+                  <ArrowUpRight className="w-3 h-3" strokeWidth={2} />
+                </span>
+              </a>
+            </div>
+          </div>
+
+          {/* Social Credibility Links */}
+          <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-4 sm:gap-8 pt-6 sm:pt-8 border-t border-[var(--border-subtle)] text-xs text-[var(--text-secondary)] font-medium">
+            <a
+              href="https://scholar.google.com/citations?user=6FOyM3IAAAAJ&hl=en"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
-              {copiedPhone ? (
-                <Check className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
-              ) : (
-                <Copy className="w-3.5 h-3.5" />
-              )}
-            </button>
+              <GraduationCap className="w-4 h-4" strokeWidth={1.5} />
+              <span>Google Scholar Profile</span>
+              <ExternalLink className="w-3 h-3 opacity-40" strokeWidth={1.5} />
+            </a>
+
+            <a
+              href="https://github.com/dikshantsagar"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 hover:text-[var(--text-primary)] transition-colors"
+            >
+              <Github className="w-4 h-4" strokeWidth={1.5} />
+              <span>GitHub Repositories</span>
+              <ExternalLink className="w-3 h-3 opacity-40" strokeWidth={1.5} />
+            </a>
+
+            <a
+              href="https://www.linkedin.com/in/dikshantsagar/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            >
+              <Linkedin className="w-4 h-4" strokeWidth={1.5} />
+              <span>LinkedIn Network</span>
+              <ExternalLink className="w-3 h-3 opacity-40" strokeWidth={1.5} />
+            </a>
           </div>
-
-          {/* Location / University card */}
-          <div className="p-4 sm:p-5 rounded-2xl card-inner-box flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400">
-              <MapPin className="w-4 h-4" />
-            </div>
-            <div>
-              <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] block font-medium">
-                Affiliation
-              </span>
-              <span className="text-xs text-[var(--text-primary)] font-medium">
-                UC Irvine • Baldi Lab
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Quick Email Launcher Button */}
-        <div className="mb-10">
-          <a
-            href={`mailto:${PERSONAL_INFO.email}?subject=Internship%20Opportunity%20%2F%20Research%20Inquiry%20-%20Dikshant%20Sagar`}
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-sm font-semibold text-slate-900 bg-cyan-400 hover:bg-cyan-300 transition-all duration-200 shadow-xl shadow-cyan-500/25 hover:scale-[1.02] active:scale-[0.98]"
-          >
-            <Send className="w-4 h-4" />
-            <span>Send Direct Message</span>
-          </a>
-        </div>
-
-        {/* Social / Scholar Profile Links */}
-        <div className="pt-8 border-t border-[var(--border-subtle)] flex flex-wrap items-center justify-center gap-6 text-xs text-[var(--text-secondary)]">
-          <a
-            href="https://scholar.google.com/citations?user=6FOyM3IAAAAJ&hl=en"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors font-medium"
-          >
-            <GraduationCap className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
-            <span>Google Scholar Profile</span>
-            <ArrowUpRight className="w-3 h-3 text-[var(--text-muted)]" />
-          </a>
-
-          <a
-            href="https://github.com/dikshantsagar"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors font-medium"
-          >
-            <Github className="w-4 h-4 text-[var(--text-secondary)]" />
-            <span>GitHub Repository</span>
-            <ArrowUpRight className="w-3 h-3 text-[var(--text-muted)]" />
-          </a>
-
-          <a
-            href="https://www.linkedin.com/in/dikshantsagar/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors font-medium"
-          >
-            <Linkedin className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-            <span>LinkedIn Profile</span>
-            <ArrowUpRight className="w-3 h-3 text-[var(--text-muted)]" />
-          </a>
         </div>
       </div>
     </section>

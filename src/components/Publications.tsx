@@ -2,23 +2,21 @@ import React, { useState } from 'react';
 import { PUBLICATIONS, Publication } from '../data/portfolioData';
 import { BibtexModal } from './BibtexModal';
 import {
-  BookOpen,
-  FileDown,
   ExternalLink,
-  Quote,
   Search,
   Award,
-  GraduationCap
+  Quote,
+  ArrowUpRight
 } from 'lucide-react';
 
 export const Publications: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState<'all' | 'highlight' | 'biomedicine' | 'vlm-physics'>('all');
+  const [activeCategory, setActiveCategory] = useState<'highlight' | 'all' | 'biomedicine' | 'vlm-physics'>('highlight');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBibtexPub, setSelectedBibtexPub] = useState<Publication | null>(null);
 
   const categories = [
-    { id: 'all', label: 'All Publications' },
     { id: 'highlight', label: 'Selected Highlights' },
+    { id: 'all', label: 'All Publications (15+)' },
     { id: 'biomedicine', label: 'Biomedicine & Clinical AI' },
     { id: 'vlm-physics', label: 'VLMs & Particle Physics' }
   ];
@@ -26,8 +24,8 @@ export const Publications: React.FC = () => {
   const filteredPublications = PUBLICATIONS.filter((pub) => {
     const matchesCategory =
       activeCategory === 'all' ||
-      pub.category === activeCategory ||
-      (activeCategory === 'highlight' && (pub.award || pub.impactFactor));
+      (activeCategory === 'highlight' && (pub.award || pub.impactFactor || pub.venue.includes('Nature') || pub.venue.includes('NeurIPS'))) ||
+      pub.category === activeCategory;
 
     const q = searchQuery.toLowerCase();
     const matchesSearch =
@@ -35,61 +33,41 @@ export const Publications: React.FC = () => {
       pub.title.toLowerCase().includes(q) ||
       pub.venue.toLowerCase().includes(q) ||
       pub.authors.some((a) => a.toLowerCase().includes(q)) ||
-      pub.summary.toLowerCase().includes(q) ||
-      pub.technicalDetails.toLowerCase().includes(q);
+      pub.summary.toLowerCase().includes(q);
 
     return matchesCategory && matchesSearch;
   });
 
   return (
-    <section id="publications" className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      {/* Section Header */}
-      <div className="mb-12 text-center max-w-3xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-600 dark:text-cyan-300 text-xs font-mono mb-4">
-          <BookOpen className="w-3.5 h-3.5" />
-          <span>Peer-Reviewed Literature</span>
-        </div>
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--text-primary)] mb-4">
-          Selected Research & Publications
-        </h2>
-        <p className="text-[var(--text-muted)] text-sm sm:text-base leading-relaxed">
-          15+ peer-reviewed papers spanning multimodal biomedical representation learning, physics-informed generative AI, and vision-language foundation models.
-        </p>
-      </div>
-
-      {/* Filter and Search Controls */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
-        {/* Category Pills */}
-        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setActiveCategory(cat.id as any)}
-              className={`px-4 py-2 rounded-full text-xs font-medium transition-all duration-200 cursor-pointer ${
-                activeCategory === cat.id
-                  ? 'bg-cyan-500 dark:bg-cyan-400 text-white dark:text-slate-900 font-semibold shadow-md shadow-cyan-500/20'
-                  : 'card-surface text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-slate-300 dark:hover:border-white/20'
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
+    <section id="publications" className="py-14 sm:py-20 lg:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      {/* Macro-Whitespace & Eyebrow Heading */}
+      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8 sm:mb-12 text-left">
+        <div>
+          <div className="eyebrow-badge bg-blue-500/10 border border-blue-500/25 text-blue-600 dark:text-blue-400 mb-3 sm:mb-4">
+            <span>02 / Peer-Reviewed Literature</span>
+          </div>
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[var(--text-primary)] mb-2 sm:mb-3">
+            Selected Publications
+          </h2>
+          <p className="text-sm sm:text-base lg:text-lg text-[var(--text-secondary)] max-w-2xl leading-relaxed">
+            15+ papers across Nature Communications Physics, Cytometry A, Computers in Biology & Medicine, and NeurIPS workshops.
+          </p>
         </div>
 
-        {/* Search input */}
-        <div className="relative w-full md:w-80">
-          <Search className="w-4 h-4 text-[var(--text-muted)] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+        {/* Search Bar */}
+        <div className="relative w-full lg:w-72">
+          <Search className="w-4 h-4 text-[var(--text-muted)] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" strokeWidth={1.5} />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search papers, methods, topics..."
-            className="w-full pl-10 pr-8 py-2.5 rounded-xl card-surface border-[var(--border-subtle)] text-xs text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-cyan-400 shadow-inner transition-colors"
+            placeholder="Search papers or methods..."
+            className="w-full pl-11 pr-8 py-2.5 sm:py-3 rounded-full bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)] text-xs font-medium text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-blue-500 transition-all duration-300"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)]"
             >
               ✕
             </button>
@@ -97,100 +75,100 @@ export const Publications: React.FC = () => {
         </div>
       </div>
 
-      {/* Publications List */}
-      <div className="space-y-6">
-        {filteredPublications.map((pub) => {
-          return (
-            <article
-              key={pub.id}
-              className="group p-6 sm:p-8 rounded-2xl card-surface hover:border-cyan-500/40 shadow-xl transition-all duration-200 text-left"
-            >
-              {/* Header Badges */}
-              <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="px-3 py-1 rounded-md card-inner-box border-cyan-500/30 font-mono text-xs text-cyan-600 dark:text-cyan-300 font-semibold">
-                    {pub.venue}
-                  </span>
-                  <span className="font-mono text-xs text-[var(--text-muted)]">
-                    {pub.year}
-                  </span>
+      {/* Floating Category Pills: Horizontal scroll on mobile */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 sm:flex-wrap mb-8 sm:mb-10 -mx-4 px-4 sm:mx-0 sm:px-0">
+        {categories.map((cat) => (
+          <button
+            key={cat.id}
+            onClick={() => setActiveCategory(cat.id as any)}
+            className={`px-3.5 sm:px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap shrink-0 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] cursor-pointer active:scale-95 ${
+              activeCategory === cat.id
+                ? 'bg-[var(--btn-primary-bg)] text-[var(--btn-primary-text)] shadow-sm'
+                : 'bg-[var(--bezel-outer-bg)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-subtle)]'
+            }`}
+          >
+            {cat.label}
+          </button>
+        ))}
+      </div>
 
-                  {pub.impactFactor && (
-                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-300 text-[11px] font-mono font-medium">
-                      Impact Factor: {pub.impactFactor}
+      {/* Publications List with Double-Bezel Cards */}
+      <div className="space-y-5 sm:space-y-6 text-left">
+        {filteredPublications.map((pub) => (
+          <article
+            key={pub.id}
+            className="double-bezel group"
+          >
+            <div className="bezel-core p-5 sm:p-8 flex flex-col justify-between">
+              <div>
+                {/* Meta Header */}
+                <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    <span className="font-mono text-xs font-bold text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/25">
+                      {pub.venue}
                     </span>
-                  )}
-
-                  {pub.acceptanceRate && (
-                    <span className="px-2.5 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-600 dark:text-indigo-300 text-[11px] font-mono font-medium">
-                      {pub.acceptanceRate} Acceptance
+                    <span className="font-mono text-xs text-[var(--text-muted)]">
+                      {pub.year}
                     </span>
-                  )}
-                </div>
-
-                {pub.award && (
-                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-600 dark:text-amber-300 text-xs font-mono font-semibold shadow-sm">
-                    <Award className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
-                    <span>{pub.award}</span>
+                    {pub.impactFactor && (
+                      <span className="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-[var(--chip-bg)] text-[var(--chip-text)] border border-[var(--chip-border)]">
+                        IF {pub.impactFactor}
+                      </span>
+                    )}
                   </div>
-                )}
+
+                  {pub.award && (
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs font-semibold shadow-sm">
+                      <Award className="w-3.5 h-3.5 text-amber-500" strokeWidth={1.5} />
+                      <span>{pub.award}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Paper Title */}
+                <h3 className="text-lg sm:text-xl font-bold text-[var(--text-primary)] mb-2.5 leading-snug group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
+                  {pub.title}
+                </h3>
+
+                {/* Authors */}
+                <p className="text-xs sm:text-sm text-[var(--text-secondary)] mb-4 font-mono leading-relaxed">
+                  {pub.authors.map((author, index) => {
+                    const isDikshant = author.includes('Dikshant') || author.includes('Sagar');
+                    return (
+                      <span key={index}>
+                        {isDikshant ? (
+                          <span className="text-[var(--text-primary)] font-bold underline decoration-blue-500 decoration-2">
+                            {author}
+                          </span>
+                        ) : (
+                          <span>{author}</span>
+                        )}
+                        {index < pub.authors.length - 1 && ', '}
+                      </span>
+                    );
+                  })}
+                </p>
+
+                {/* Key Result Takeaway */}
+                <p className="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed mb-6">
+                  <span className="text-[var(--text-primary)] font-semibold">Key Significance: </span>
+                  {pub.summary}
+                </p>
               </div>
 
-              {/* Paper Title */}
-              <h3 className="text-lg sm:text-xl font-bold text-[var(--text-primary)] mb-2.5 group-hover:text-cyan-600 dark:group-hover:text-cyan-200 transition-colors leading-snug">
-                {pub.title}
-              </h3>
-
-              {/* Authors List with Dikshant highlighted */}
-              <p className="text-xs sm:text-sm text-[var(--text-secondary)] mb-5 font-mono leading-relaxed">
-                {pub.authors.map((author, index) => {
-                  const isDikshant = author.includes('Dikshant') || author.includes('Sagar');
-                  return (
-                    <span key={index}>
-                      {isDikshant ? (
-                        <span className="text-cyan-600 dark:text-cyan-300 font-bold underline decoration-cyan-400/60 decoration-2">
-                          {author}
-                        </span>
-                      ) : (
-                        <span>{author}</span>
-                      )}
-                      {index < pub.authors.length - 1 && ', '}
-                    </span>
-                  );
-                })}
-              </p>
-
-              {/* Plain-English summary + Technical details */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-xl card-inner-box text-xs mb-5">
-                <div>
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-cyan-600 dark:text-cyan-400 font-semibold block mb-1.5">
-                    Significance & Takeaway
-                  </span>
-                  <p className="text-[var(--text-primary)] leading-relaxed">
-                    {pub.summary}
-                  </p>
-                </div>
-                <div>
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-indigo-600 dark:text-indigo-400 font-semibold block mb-1.5">
-                    Technical Contribution
-                  </span>
-                  <p className="text-[var(--text-secondary)] leading-relaxed">
-                    {pub.technicalDetails}
-                  </p>
-                </div>
-              </div>
-
-              {/* Action Links */}
-              <div className="flex flex-wrap items-center gap-3 pt-1">
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-[var(--border-subtle)]">
                 {pub.pdfUrl && (
                   <a
                     href={pub.pdfUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-cyan-400 text-slate-900 text-xs font-semibold hover:bg-cyan-300 transition-colors shadow-sm"
+                    className="group/btn inline-flex items-center gap-2 pl-4 pr-1.5 py-1 rounded-full bg-[var(--btn-primary-bg)] text-[var(--btn-primary-text)] text-xs font-semibold hover:opacity-90 transition-all duration-300 shadow-sm active:scale-[0.98]"
                   >
-                    <FileDown className="w-3.5 h-3.5" />
                     <span>Download PDF</span>
+                    <span className="w-6 h-6 rounded-full bg-[var(--btn-primary-text)] text-[var(--btn-primary-bg)] flex items-center justify-center transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5">
+                      <ArrowUpRight className="w-3.5 h-3.5" strokeWidth={2} />
+                    </span>
                   </a>
                 )}
 
@@ -199,87 +177,24 @@ export const Publications: React.FC = () => {
                     href={pub.externalUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl card-inner-box hover:bg-[var(--bg-surface-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-medium transition-colors"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-[var(--border-subtle)] bg-[var(--bezel-outer-bg)] hover:bg-[var(--bg-surface-elevated)] text-xs font-medium text-[var(--text-primary)] transition-all duration-300"
                   >
-                    <span>Paper / Publisher</span>
-                    <ExternalLink className="w-3 h-3 text-[var(--text-muted)]" />
-                  </a>
-                )}
-
-                {pub.arxivUrl && pub.arxivUrl !== pub.externalUrl && (
-                  <a
-                    href={pub.arxivUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl card-inner-box hover:bg-[var(--bg-surface-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-medium transition-colors"
-                  >
-                    <span>arXiv Preprint</span>
-                    <ExternalLink className="w-3 h-3 text-[var(--text-muted)]" />
+                    <span>ArXiv / Publisher</span>
+                    <ExternalLink className="w-3 h-3 text-[var(--text-muted)]" strokeWidth={1.5} />
                   </a>
                 )}
 
                 <button
                   onClick={() => setSelectedBibtexPub(pub)}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl card-inner-box hover:bg-[var(--bg-surface-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-medium transition-colors ml-auto cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full border border-[var(--border-subtle)] bg-[var(--bezel-outer-bg)] hover:bg-[var(--bg-surface-elevated)] text-xs font-mono text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all duration-300 cursor-pointer"
                 >
-                  <Quote className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+                  <Quote className="w-3 h-3 text-[var(--text-muted)]" strokeWidth={1.5} />
                   <span>BibTeX</span>
                 </button>
               </div>
-            </article>
-          );
-        })}
-
-        {filteredPublications.length === 0 && (
-          <div className="text-center py-12 rounded-2xl card-surface text-[var(--text-muted)] text-sm">
-            No publications found matching "{searchQuery}".
-          </div>
-        )}
-      </div>
-
-      {/* Theses Section */}
-      <div className="mt-14 p-6 sm:p-8 rounded-3xl card-surface shadow-xl text-left">
-        <div className="flex items-center gap-2 text-cyan-600 dark:text-cyan-400 font-mono text-xs uppercase tracking-wider mb-5">
-          <GraduationCap className="w-4 h-4" />
-          <span>Academic Theses</span>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="p-5 rounded-2xl card-inner-box">
-            <span className="text-xs font-mono text-cyan-600 dark:text-cyan-400/90 block mb-1.5 font-medium">
-              Master's Thesis • Cal State LA (2024)
-            </span>
-            <h4 className="font-bold text-sm sm:text-base text-[var(--text-primary)] mb-2 leading-snug">
-              Deep Reconstruction Model for Exposing Low Concentration Metabolites in Edited-MRS Brain Scans
-            </h4>
-            <a
-              href="https://scholarworks.calstate.edu/concern/theses/k0698h814"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 font-medium"
-            >
-              <span>View CSULA Thesis Archive</span>
-              <ExternalLink className="w-3 h-3" />
-            </a>
-          </div>
-
-          <div className="p-5 rounded-2xl card-inner-box">
-            <span className="text-xs font-mono text-cyan-600 dark:text-cyan-400/90 block mb-1.5 font-medium">
-              B.Tech Thesis • IIIT Delhi (2021)
-            </span>
-            <h4 className="font-bold text-sm sm:text-base text-[var(--text-primary)] mb-2 leading-snug">
-              Multiple Myeloma Cancer Cell Instance Segmentation from Bone Marrow Aspirate Slides
-            </h4>
-            <a
-              href="https://arxiv.org/abs/2110.04275"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 font-medium"
-            >
-              <span>View arXiv:2110.04275</span>
-              <ExternalLink className="w-3 h-3" />
-            </a>
-          </div>
-        </div>
+            </div>
+          </article>
+        ))}
       </div>
 
       {/* BibTeX Modal */}
