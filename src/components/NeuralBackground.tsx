@@ -37,13 +37,13 @@ export const NeuralBackground: React.FC = () => {
     let height = (canvas.height = window.innerHeight);
 
     const isMobile = width < 768;
-    const nodeCount = isMobile ? 32 : 68;
-    const maxDistance = isMobile ? 140 : 185;
+    const nodeCount = isMobile ? 24 : 52;
+    const maxDistance = isMobile ? 120 : 160;
 
-    // Palette calibrated for distinct yet elegant neural depth
+    // Palette calibrated for subtle, agency-grade depth
     const isDark = theme === 'dark';
-    const primaryRGB = isDark ? '96, 165, 250' : '37, 99, 235';     // Cobalt/Sky blue
-    const secondaryRGB = isDark ? '168, 85, 247' : '99, 102, 241';  // Indigo/violet
+    const primaryRGB = isDark ? '59, 130, 246' : '37, 99, 235';     // Cobalt/blue
+    const secondaryRGB = isDark ? '147, 51, 234' : '99, 102, 241';  // Indigo/violet
     const accentRGB = isDark ? '56, 189, 248' : '2, 132, 199';      // Sky/cyan
 
     // Initialize nodes
@@ -52,9 +52,9 @@ export const NeuralBackground: React.FC = () => {
       nodes.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * (prefersReducedMotion ? 0.05 : 0.28),
-        vy: (Math.random() - 0.5) * (prefersReducedMotion ? 0.05 : 0.28),
-        radius: Math.random() * 1.4 + 1.5,
+        vx: (Math.random() - 0.5) * (prefersReducedMotion ? 0.05 : 0.25),
+        vy: (Math.random() - 0.5) * (prefersReducedMotion ? 0.05 : 0.25),
+        radius: Math.random() * 1.2 + 1.2,
         pulsePhase: Math.random() * Math.PI * 2,
         pulseSpeed: 0.015 + Math.random() * 0.02
       });
@@ -62,7 +62,7 @@ export const NeuralBackground: React.FC = () => {
 
     // Dynamic signals (action potentials traveling across synapses)
     const signals: Signal[] = [];
-    const maxSignals = isMobile ? 4 : 9;
+    const maxSignals = isMobile ? 3 : 7;
 
     const spawnSignal = () => {
       if (signals.length >= maxSignals || prefersReducedMotion) return;
@@ -93,7 +93,7 @@ export const NeuralBackground: React.FC = () => {
     const mouse = {
       x: -1000,
       y: -1000,
-      radius: 170,
+      radius: 150,
       active: false
     };
 
@@ -126,7 +126,7 @@ export const NeuralBackground: React.FC = () => {
       ctx.clearRect(0, 0, width, height);
 
       // Random signal spawner
-      if (time - lastSignalSpawn > 700) {
+      if (time - lastSignalSpawn > 800) {
         spawnSignal();
         lastSignalSpawn = time;
       }
@@ -162,19 +162,19 @@ export const NeuralBackground: React.FC = () => {
         }
 
         // Render node dot
-        const baseAlpha = isDark ? 0.45 : 0.35;
-        const currentAlpha = baseAlpha + pulse * 0.35;
-        const currentRadius = n.radius + pulse * 0.6;
+        const baseAlpha = isDark ? 0.25 : 0.2;
+        const currentAlpha = baseAlpha + pulse * 0.25;
+        const currentRadius = n.radius + pulse * 0.5;
 
         ctx.beginPath();
         ctx.arc(n.x, n.y, currentRadius, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${primaryRGB}, ${currentAlpha})`;
         ctx.fill();
 
-        // Soft halo
+        // Subtle soft halo
         ctx.beginPath();
-        ctx.arc(n.x, n.y, currentRadius * 2.4, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${primaryRGB}, ${currentAlpha * 0.35})`;
+        ctx.arc(n.x, n.y, currentRadius * 2.2, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${primaryRGB}, ${currentAlpha * 0.25})`;
         ctx.fill();
       }
 
@@ -187,15 +187,14 @@ export const NeuralBackground: React.FC = () => {
 
           if (distSq < maxDistance * maxDistance) {
             const dist = Math.sqrt(distSq);
-            // Linear to quadratic fade: gives crisp visible lines when close
             const normDist = 1 - dist / maxDistance;
-            const lineAlpha = (isDark ? 0.28 : 0.20) * normDist;
+            const lineAlpha = (isDark ? 0.08 : 0.06) * (normDist * normDist);
 
             ctx.beginPath();
             ctx.moveTo(nodes[i].x, nodes[i].y);
             ctx.lineTo(nodes[j].x, nodes[j].y);
             ctx.strokeStyle = `rgba(${secondaryRGB}, ${lineAlpha})`;
-            ctx.lineWidth = 0.9;
+            ctx.lineWidth = 0.6;
             ctx.stroke();
           }
         }
@@ -211,8 +210,8 @@ export const NeuralBackground: React.FC = () => {
             ctx.beginPath();
             ctx.moveTo(nodes[i].x, nodes[i].y);
             ctx.lineTo(mouse.x, mouse.y);
-            ctx.strokeStyle = `rgba(${accentRGB}, ${(isDark ? 0.38 : 0.28) * mNorm})`;
-            ctx.lineWidth = 1.1;
+            ctx.strokeStyle = `rgba(${accentRGB}, ${(isDark ? 0.16 : 0.12) * mNorm})`;
+            ctx.lineWidth = 0.8;
             ctx.stroke();
           }
         }
@@ -239,16 +238,16 @@ export const NeuralBackground: React.FC = () => {
         const sy = from.y + (to.y - from.y) * sig.progress;
 
         // Render traveling synaptic pulse
-        const pulseAlpha = Math.sin(sig.progress * Math.PI) * (isDark ? 0.85 : 0.7);
+        const pulseAlpha = Math.sin(sig.progress * Math.PI) * (isDark ? 0.6 : 0.45);
         ctx.beginPath();
-        ctx.arc(sx, sy, 2.5, 0, Math.PI * 2);
+        ctx.arc(sx, sy, 2, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${sig.color}, ${pulseAlpha})`;
         ctx.fill();
 
         // Glow tail
         ctx.beginPath();
-        ctx.arc(sx, sy, 5.5, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${sig.color}, ${pulseAlpha * 0.4})`;
+        ctx.arc(sx, sy, 4.5, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${sig.color}, ${pulseAlpha * 0.3})`;
         ctx.fill();
       }
 
