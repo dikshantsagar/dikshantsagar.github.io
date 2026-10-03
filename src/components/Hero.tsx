@@ -84,7 +84,7 @@ export const Hero: React.FC = () => {
           </div>
 
           <p className="text-xs sm:text-base text-[var(--text-secondary)] leading-relaxed max-w-xl mb-6 sm:mb-8 text-center sm:text-left">
-            Third-year CS Ph.D. candidate advised by <span className="text-[var(--text-primary)] font-semibold">Dr. Pierre Baldi</span>. Engineering multimodal biomedical foundation models, physics-conditioned diffusion, and vision-language architectures for frontier scientific discovery.
+            Third-year CS Ph.D. candidate advised by <span className="text-[var(--text-primary)] font-semibold">Dr. Pierre Baldi</span>. Engineering multimodal and generative AI for biomedical science and scientific discovery, spanning medical imaging, physiological time series, molecular modeling, and vision-language models.
           </p>
 
           {/* Double-Bezel Metric Bento Grid: Symmetrical Dividers */}
